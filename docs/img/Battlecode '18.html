@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<!-- saved from url=(0030)http://localhost:6147/run.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Battlecode '18</title>
+    <link rel="stylesheet" href="./Battlecode &#39;18_files/font-awesome.min.css">
+    <link rel="stylesheet" href="./Battlecode &#39;18_files/bulma.min.css">
+    <link rel="icon" type="image/png" href="http://localhost:6147/favicon.png">
+    <style>
+        canvas { width:100%; }
+    </style>
+</head>
+<body style="display: flex;min-height: 100vh;flex-direction: column;">
+    <section class="hero is-primary" style="background-color:#A31F34">
+        <div class="hero-body">
+            <div class="container">
+                <h1 class="title">
+                    MIT Battlecode: Escape to Mars!
+                </h1>
+                <h2 class="subtitle">
+                    Game running interface for Battlecode 2018
+                </h2>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" style="flex: 1 1 0%; display: none;" id="runner_view">
+        <div class="notification is-warning" style="display:none" id="warning">
+            <button class="delete" onclick="document.getElementById(&#39;warning&#39;).style.display=&#39;none&#39;"></button>
+            <strong> Fatal error. </strong> <span id="warning-text"></span>
+        </div>
+        <div class="notification is-success" style="display:none" id="upload-report">
+            <button class="delete" onclick="document.getElementById(&#39;upload-report&#39;).style.display=&#39;none&#39;"></button>
+            <strong> Upload success! </strong> <span id="upload-text"></span>
+        </div>
+
+
+        <div class="tile is-ancestor">
+            <div class="tile is-vertical is-8">
+                <div class="tile">
+                    <div class="tile is-parent is-vertical">
+                        <article class="tile is-child">
+                            <table class="table" id="gauss-table" style="width: 100%">
+                                <thead>
+                                    <tr>
+                                        <th>Variable</th>
+                                        <th>Value</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Player memory limit (in mb)</td>
+                                        <td><input class="input" type="text" value="256" id="memory"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Initial timing pool (ms)</td>
+                                        <td><input class="input" type="text" value="10000" id="pool"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Additional time/turn (ms)</td>
+                                        <td><input class="input" type="text" value="50" id="additional"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Replay filename</td>
+                                        <td><input class="input" type="text" value="replay.bc18" id="replay"></td>
+                                    </tr>
+                                    <!--<tr>
+                                        <td>Use viewer</td>
+                                        <td><div class="control">
+                                            <label class="radio">
+                                                <input type="radio" name="viewer" value="1">
+                                                True
+                                            </label>
+                                            <label class="radio">
+                                                <input type="radio" name="viewer" value="0" checked>
+                                                False
+                                            </label>
+                                        </div></td>
+                                    </tr>-->
+
+                                </tbody>
+                            </table>
+
+                        </article>
+                    </div>
+                </div>
+            </div>
+            <div class="tile is-parent">
+                <article class="tile is-child notification is-info">
+                    <div class="content">
+                        <div class="content">
+
+                            <div class="field">
+                                <label class="label" style="color:#fff">Red Player Directory:</label>
+                                <div class="control">
+                                    <div class="select" style="width:100%">
+                                        <select style="width:100%" id="red">
+                                        <option value="CattleCode">CattleCode</option><option value="examplefuncsplayer-c">examplefuncsplayer-c</option><option value="examplefuncsplayer-java">examplefuncsplayer-java</option><option value="examplefuncsplayer-python">examplefuncsplayer-python</option></select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label class="label" style="color:#fff">Blue Player Directory:</label>
+                                <div class="control">
+                                    <div class="select" style="width:100%">
+                                        <select style="width:100%" id="blue">
+                                        <option value="CattleCode">CattleCode</option><option value="examplefuncsplayer-c">examplefuncsplayer-c</option><option value="examplefuncsplayer-java">examplefuncsplayer-java</option><option value="examplefuncsplayer-python">examplefuncsplayer-python</option></select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label class="label" style="color:#fff">Map:</label>
+                                <div class="control">
+                                    <div class="select" style="width:100%">
+                                        <select style="width:100%" id="map">
+                                        <option value="mirror.bc18map">mirror.bc18map</option><option value="bananas.bc18t">bananas.bc18t</option><option value="hell.bc18t">hell.bc18t</option><option value="socket.bc18map">socket.bc18map</option><option value="julia.bc18t">julia.bc18t</option><option value="sokoban.bc18t">sokoban.bc18t</option><option value="butterfly.bc18map">butterfly.bc18map</option><option value="cross.bc18map">cross.bc18map</option><option value="nuclear.bc18map">nuclear.bc18map</option><option value="courtyard.bc18map">courtyard.bc18map</option><option value="moo.bc18map">moo.bc18map</option><option value="gim.bc18map">gim.bc18map</option><option value="pipes.bc18map">pipes.bc18map</option><option value="jupiter.bc18map">jupiter.bc18map</option><option value="oldtown.bc18map">oldtown.bc18map</option><option value="shift.bc18map">shift.bc18map</option><option value="olympus.bc18map">olympus.bc18map</option><option value="whye.bc18map">whye.bc18map</option><option value="secretgarden.bc18map">secretgarden.bc18map</option><option value="formula.bc18map">formula.bc18map</option><option value="desert.bc18t">desert.bc18t</option><option value="testmap.bc18map">testmap.bc18map</option></select>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+
+        <div class="field has-addons" style="float:right">
+            <button onclick="upload_modal()" style="margin-right:10px" class="button is-primary">
+                <span class="icon">
+                    <i class="fa fa-cloud-upload"></i>
+                </span><span>Upload Player</span>
+            </button>
+            <button onclick="eel.stop_manager()()" style="margin-right:10px" class="button is-danger">
+                <span class="icon">
+                    <i class="fa fa-stop-circle-o"></i>
+                </span><span>Stop Manager</span>
+            </button>
+            <button id="submit" class="button is-success">
+                <span class="icon">
+                    <i class="fa fa-rocket"></i>
+                </span>
+                <span>Run Game</span>
+            </button>
+        </div>
+
+    </section>
+
+
+    <section class="section" style="flex: 1 1 0%; display: block;" id="running_view">
+        <div class="notification is-success" style="display: block;" id="winner">
+            <button class="delete" onclick="document.getElementById(&#39;winner&#39;).style.display=&#39;none&#39;"></button>
+            <strong> Game completed. </strong> Winner is <span id="winner-text">blue team</span>
+        </div>
+
+        <div class="tile is-ancestor">
+            <div class="tile is-vertical is-8">
+                <div class="tile is-parent">
+                    <article class="tile is-child">
+                        <div class="content">
+                            <input id="slider" style="width:100%" type="range" min="0" max="361" value="0">
+                        </div>
+                    </article>
+                </div>
+                <div class="tile">
+                    <div class="tile is-parent is-6 is-vertical">
+                        <article class="tile is-child">
+                            <canvas id="earth" width="220" height="220"></canvas>
+                        </article>
+                    </div>
+                    <div class="tile is-6 is-parent is-vertical">
+                        <article class="tile is-child">
+                            <canvas id="mars" width="220" height="220"></canvas>
+                        </article>
+                    </div>
+                </div>
+            </div>
+            <div class="tile is-parent">
+                <article class="tile is-child">
+                    <div class="content" style="text-align:center">
+                        <a onclick="trigger_exit_viewer()" style="width:100%" class="button is-warning">
+                            <span class="icon">
+                                <i class="fa fa-arrow-up"></i>
+                            </span><span>Exit Viewer</span>
+                        </a><br><br>
+
+                        <a onclick="use_latest()" style="width:100%" class="button is-primary">
+                            <span class="icon">
+                                <i class="fa fa-refresh"></i>
+                            </span><span>View live</span>
+                        </a><br><br>
+
+
+                        <a onclick="trigger_end_game()" style="width:100%" class="button is-warning">
+                            <span class="icon">
+                                <i class="fa fa-times-circle"></i>
+                            </span><span>End game</span>
+                        </a><br><br>
+
+                        <a onclick="eel.stop_manager()()" style="width:100%" class="button is-danger">
+                            <span class="icon">
+                                <i class="fa fa-stop-circle-o"></i>
+                            </span><span>Stop manager</span>
+                        </a><br><br>
+
+                        <h1 class="title" id="turn_field">361</h1>
+                    </div>
+                    <div>
+                        <a onclick="trigger_save_logs()" style="width:100%" class="button is-link">
+                            <span class="icon">
+                                <i class="fa fa-download"></i>
+                            </span><span>Save Logs</span>
+                        </a><br><br>
+                    </div>
+                </article>
+            </div>
+        </div>
+        <div class="tile is-ancestor">
+            <div class="tile is-parent">
+                <div class="tile is-child box" style="overflow:scroll">
+                    <p class="title">Red Earth</p>
+                    <p id="red_earth">javac ./Mage.java ./HashableLocation.java ./Knight.java ./RangerRushProtocol.java ./BuildHomeProtocol.java ./Player.java ./Rocket.java ./MapUtil.java ./Ranger.java ./Worker.java ./Protocol.java ./Healer.java ./Factory.java -classpath ../battlecode/java<br>java -classpath .:../battlecode/java Player<br>-- Starting battlecode java engine, vroom vroom! --<br>-- Note: you may get a warning about stack guards, please ignore it. --<br>Loading linux library: /battlecode/java/bc/libbattlecode-java-linux.so<br>Java HotSpot(TM) 64-Bit Server VM warning: You have loaded library /battlecode/java/bc/libbattlecode-java-linux.so which might have disabled stack guard. The VM will try to fix the stack guard now.<br>It's highly recommended that you fix the library with 'execstack -c &lt;libfile&gt;', or link it with '-z noexecstack'.<br>-- Engine loaded. --<br>Player connecting to unix:///tmp/battlecode-socket<br>Successfully connected to the manager!<br>Round 1 time: 0<br>Round 2 time: 25<br>Round 3 time: 4<br>Round 4 time: 10<br>Round 5 time: 2<br>Round 6 time: 0<br>Round 7 time: 0<br>Round 8 time: 3<br>Round 9 time: 3<br>Round 10 time: 3<br>Round 11 time: 3<br>Round 12 time: 1<br>Round 13 time: 4<br>Round 14 time: 0<br>Round 15 time: 1<br>Round 16 time: 0<br>Round 17 time: 0<br>Round 18 time: 0<br>Round 19 time: 0<br>Round 20 time: 3<br>Round 21 time: 2<br>Round 22 time: 2<br>Round 23 time: 0<br>Round 24 time: 1<br>[MapLocation { planet: Earth, x: 18, y: 7 }, MapLocation { planet: Earth, x: 18, y: 8 }, MapLocation { planet: Earth, x: 19, y: 8 }, MapLocation { planet: Earth, x: 19, y: 7 }, MapLocation { planet: Earth, x: 19, y: 6 }, MapLocation { planet: Earth, x: 18, y: 6 }, MapLocation { planet: Earth, x: 17, y: 6 }, MapLocation { planet: Earth, x: 17, y: 7 }, MapLocation { planet: Earth, x: 17, y: 8 }, MapLocation { planet: Earth, x: 18, y: 9 }]<br>[MapLocation { planet: Earth, x: 16, y: 7 }, MapLocation { planet: Earth, x: 16, y: 8 }, MapLocation { planet: Earth, x: 16, y: 6 }, MapLocation { planet: Earth, x: 15, y: 6 }, MapLocation { planet: Earth, x: 15, y: 7 }, MapLocation { planet: Earth, x: 15, y: 8 }, MapLocation { planet: Earth, x: 16, y: 9 }, MapLocation { planet: Earth, x: 17, y: 9 }, MapLocation { planet: Earth, x: 15, y: 9 }, MapLocation { planet: Earth, x: 17, y: 5 }]<br>[MapLocation { planet: Earth, x: 14, y: 10 }, MapLocation { planet: Earth, x: 14, y: 11 }, MapLocation { planet: Earth, x: 15, y: 11 }, MapLocation { planet: Earth, x: 15, y: 10 }, MapLocation { planet: Earth, x: 14, y: 9 }, MapLocation { planet: Earth, x: 13, y: 9 }, MapLocation { planet: Earth, x: 13, y: 10 }, MapLocation { planet: Earth, x: 13, y: 11 }, MapLocation { planet: Earth, x: 14, y: 12 }, MapLocation { planet: Earth, x: 15, y: 12 }]<br>[MapLocation { planet: Earth, x: 18, y: 5 }, MapLocation { planet: Earth, x: 19, y: 5 }, MapLocation { planet: Earth, x: 19, y: 4 }, MapLocation { planet: Earth, x: 18, y: 4 }, MapLocation { planet: Earth, x: 17, y: 4 }, MapLocation { planet: Earth, x: 19, y: 3 }, MapLocation { planet: Earth, x: 18, y: 3 }, MapLocation { planet: Earth, x: 17, y: 3 }, MapLocation { planet: Earth, x: 16, y: 3 }, MapLocation { planet: Earth, x: 16, y: 4 }]<br>[MapLocation { planet: Earth, x: 14, y: 7 }, MapLocation { planet: Earth, x: 14, y: 8 }, MapLocation { planet: Earth, x: 14, y: 6 }, MapLocation { planet: Earth, x: 13, y: 6 }, MapLocation { planet: Earth, x: 13, y: 7 }, MapLocation { planet: Earth, x: 13, y: 8 }, MapLocation { planet: Earth, x: 15, y: 5 }, MapLocation { planet: Earth, x: 14, y: 5 }, MapLocation { planet: Earth, x: 13, y: 5 }, MapLocation { planet: Earth, x: 12, y: 5 }]<br>[MapLocation { planet: Earth, x: 15, y: 13 }, MapLocation { planet: Earth, x: 15, y: 14 }, MapLocation { planet: Earth, x: 16, y: 14 }, MapLocation { planet: Earth, x: 16, y: 13 }, MapLocation { planet: Earth, x: 16, y: 12 }, MapLocation { planet: Earth, x: 14, y: 13 }, MapLocation { planet: Earth, x: 14, y: 14 }, MapLocation { planet: Earth, x: 15, y: 15 }, MapLocation { planet: Earth, x: 16, y: 15 }, MapLocation { planet: Earth, x: 14, y: 15 }]<br>[MapLocation { planet: Earth, x: 15, y: 2 }, MapLocation { planet: Earth, x: 15, y: 3 }, MapLocation { planet: Earth, x: 16, y: 2 }, MapLocation { planet: Earth, x: 16, y: 1 }, MapLocation { planet: Earth, x: 15, y: 1 }, MapLocation { planet: Earth, x: 14, y: 1 }, MapLocation { planet: Earth, x: 14, y: 2 }, MapLocation { planet: Earth, x: 14, y: 3 }, MapLocation { planet: Earth, x: 15, y: 4 }, MapLocation { planet: Earth, x: 14, y: 4 }]<br>[MapLocation { planet: Earth, x: 13, y: 13 }, MapLocation { planet: Earth, x: 13, y: 14 }, MapLocation { planet: Earth, x: 13, y: 12 }, MapLocation { planet: Earth, x: 12, y: 12 }, MapLocation { planet: Earth, x: 12, y: 13 }, MapLocation { planet: Earth, x: 12, y: 14 }, MapLocation { planet: Earth, x: 13, y: 15 }, MapLocation { planet: Earth, x: 12, y: 15 }, MapLocation { planet: Earth, x: 12, y: 11 }, MapLocation { planet: Earth, x: 11, y: 11 }]<br>[MapLocation { planet: Earth, x: 17, y: 11 }, MapLocation { planet: Earth, x: 17, y: 12 }, MapLocation { planet: Earth, x: 18, y: 12 }, MapLocation { planet: Earth, x: 18, y: 11 }, MapLocation { planet: Earth, x: 18, y: 10 }, MapLocation { planet: Earth, x: 17, y: 10 }, MapLocation { planet: Earth, x: 16, y: 10 }, MapLocation { planet: Earth, x: 16, y: 11 }, MapLocation { planet: Earth, x: 17, y: 13 }, MapLocation { planet: Earth, x: 18, y: 13 }]<br>[MapLocation { planet: Earth, x: 18, y: 2 }, MapLocation { planet: Earth, x: 19, y: 2 }, MapLocation { planet: Earth, x: 19, y: 1 }, MapLocation { planet: Earth, x: 18, y: 1 }, MapLocation { planet: Earth, x: 17, y: 1 }, MapLocation { planet: Earth, x: 17, y: 2 }, MapLocation { planet: Earth, x: 19, y: 0 }, MapLocation { planet: Earth, x: 18, y: 0 }, MapLocation { planet: Earth, x: 17, y: 0 }, MapLocation { planet: Earth, x: 16, y: 0 }]<br>[MapLocation { planet: Earth, x: 12, y: 10 }, MapLocation { planet: Earth, x: 12, y: 9 }, MapLocation { planet: Earth, x: 11, y: 9 }, MapLocation { planet: Earth, x: 11, y: 10 }, MapLocation { planet: Earth, x: 12, y: 8 }, MapLocation { planet: Earth, x: 11, y: 8 }, MapLocation { planet: Earth, x: 10, y: 8 }, MapLocation { planet: Earth, x: 10, y: 9 }, MapLocation { planet: Earth, x: 10, y: 10 }, MapLocation { planet: Earth, x: 10, y: 11 }]<br>[MapLocation { planet: Earth, x: 17, y: 14 }, MapLocation { planet: Earth, x: 17, y: 15 }, MapLocation { planet: Earth, x: 18, y: 15 }, MapLocation { planet: Earth, x: 18, y: 14 }, MapLocation { planet: Earth, x: 17, y: 16 }, MapLocation { planet: Earth, x: 18, y: 16 }, MapLocation { planet: Earth, x: 16, y: 16 }, MapLocation { planet: Earth, x: 19, y: 16 }, MapLocation { planet: Earth, x: 19, y: 15 }, MapLocation { planet: Earth, x: 19, y: 14 }]<br>[MapLocation { planet: Earth, x: 12, y: 4 }, MapLocation { planet: Earth, x: 13, y: 4 }, MapLocation { planet: Earth, x: 13, y: 3 }, MapLocation { planet: Earth, x: 12, y: 3 }, MapLocation { planet: Earth, x: 11, y: 3 }, MapLocation { planet: Earth, x: 11, y: 4 }, MapLocation { planet: Earth, x: 11, y: 5 }, MapLocation { planet: Earth, x: 13, y: 2 }, MapLocation { planet: Earth, x: 12, y: 2 }, MapLocation { planet: Earth, x: 11, y: 2 }]<br>[MapLocation { planet: Earth, x: 12, y: 7 }, MapLocation { planet: Earth, x: 12, y: 6 }, MapLocation { planet: Earth, x: 11, y: 6 }, MapLocation { planet: Earth, x: 11, y: 7 }, MapLocation { planet: Earth, x: 10, y: 5 }, MapLocation { planet: Earth, x: 10, y: 6 }, MapLocation { planet: Earth, x: 10, y: 7 }, MapLocation { planet: Earth, x: 10, y: 4 }, MapLocation { planet: Earth, x: 9, y: 4 }, MapLocation { planet: Earth, x: 9, y: 5 }]<br>[MapLocation { planet: Earth, x: 9, y: 7 }, MapLocation { planet: Earth, x: 9, y: 8 }, MapLocation { planet: Earth, x: 9, y: 6 }, MapLocation { planet: Earth, x: 8, y: 6 }, MapLocation { planet: Earth, x: 8, y: 7 }, MapLocation { planet: Earth, x: 8, y: 8 }, MapLocation { planet: Earth, x: 9, y: 9 }, MapLocation { planet: Earth, x: 8, y: 9 }, MapLocation { planet: Earth, x: 8, y: 5 }, MapLocation { planet: Earth, x: 7, y: 5 }]<br>[MapLocation { planet: Earth, x: 10, y: 3 }, MapLocation { planet: Earth, x: 10, y: 2 }, MapLocation { planet: Earth, x: 9, y: 3 }, MapLocation { planet: Earth, x: 11, y: 1 }, MapLocation { planet: Earth, x: 10, y: 1 }, MapLocation { planet: Earth, x: 8, y: 4 }, MapLocation { planet: Earth, x: 12, y: 1 }, MapLocation { planet: Earth, x: 12, y: 0 }, MapLocation { planet: Earth, x: 11, y: 0 }, MapLocation { planet: Earth, x: 10, y: 0 }]<br>[MapLocation { planet: Earth, x: 9, y: 11 }, MapLocation { planet: Earth, x: 9, y: 12 }, MapLocation { planet: Earth, x: 10, y: 12 }, MapLocation { planet: Earth, x: 9, y: 10 }, MapLocation { planet: Earth, x: 8, y: 10 }, MapLocation { planet: Earth, x: 8, y: 11 }, MapLocation { planet: Earth, x: 8, y: 12 }, MapLocation { planet: Earth, x: 9, y: 13 }, MapLocation { planet: Earth, x: 10, y: 13 }, MapLocation { planet: Earth, x: 8, y: 13 }]<br>[MapLocation { planet: Earth, x: 19, y: 17 }, MapLocation { planet: Earth, x: 19, y: 18 }, MapLocation { planet: Earth, x: 18, y: 17 }, MapLocation { planet: Earth, x: 18, y: 18 }, MapLocation { planet: Earth, x: 19, y: 19 }, MapLocation { planet: Earth, x: 18, y: 19 }, MapLocation { planet: Earth, x: 17, y: 17 }, MapLocation { planet: Earth, x: 17, y: 18 }, MapLocation { planet: Earth, x: 17, y: 19 }, MapLocation { planet: Earth, x: 16, y: 17 }]<br>[MapLocation { planet: Earth, x: 7, y: 13 }, MapLocation { planet: Earth, x: 7, y: 14 }, MapLocation { planet: Earth, x: 8, y: 14 }, MapLocation { planet: Earth, x: 7, y: 12 }, MapLocation { planet: Earth, x: 6, y: 12 }, MapLocation { planet: Earth, x: 6, y: 13 }, MapLocation { planet: Earth, x: 8, y: 15 }, MapLocation { planet: Earth, x: 9, y: 15 }, MapLocation { planet: Earth, x: 9, y: 14 }, MapLocation { planet: Earth, x: 7, y: 11 }]<br>[MapLocation { planet: Earth, x: 5, y: 12 }, MapLocation { planet: Earth, x: 6, y: 11 }, MapLocation { planet: Earth, x: 5, y: 11 }, MapLocation { planet: Earth, x: 7, y: 10 }, MapLocation { planet: Earth, x: 6, y: 10 }, MapLocation { planet: Earth, x: 5, y: 10 }, MapLocation { planet: Earth, x: 7, y: 9 }, MapLocation { planet: Earth, x: 6, y: 9 }, MapLocation { planet: Earth, x: 5, y: 9 }, MapLocation { planet: Earth, x: 7, y: 8 }]<br>[MapLocation { planet: Earth, x: 11, y: 12 }, MapLocation { planet: Earth, x: 11, y: 13 }, MapLocation { planet: Earth, x: 11, y: 14 }, MapLocation { planet: Earth, x: 10, y: 14 }, MapLocation { planet: Earth, x: 11, y: 15 }, MapLocation { planet: Earth, x: 10, y: 15 }, MapLocation { planet: Earth, x: 11, y: 16 }, MapLocation { planet: Earth, x: 12, y: 16 }, MapLocation { planet: Earth, x: 10, y: 16 }, MapLocation { planet: Earth, x: 9, y: 16 }]<br>[MapLocation { planet: Earth, x: 9, y: 0 }, MapLocation { planet: Earth, x: 8, y: 0 }, MapLocation { planet: Earth, x: 7, y: 0 }, MapLocation { planet: Earth, x: 7, y: 1 }, MapLocation { planet: Earth, x: 6, y: 0 }, MapLocation { planet: Earth, x: 6, y: 1 }, MapLocation { planet: Earth, x: 6, y: 2 }, MapLocation { planet: Earth, x: 5, y: 0 }, MapLocation { planet: Earth, x: 5, y: 1 }, MapLocation { planet: Earth, x: 5, y: 2 }]<br>[MapLocation { planet: Earth, x: 11, y: 17 }, MapLocation { planet: Earth, x: 11, y: 18 }, MapLocation { planet: Earth, x: 12, y: 18 }, MapLocation { planet: Earth, x: 12, y: 17 }, MapLocation { planet: Earth, x: 10, y: 17 }, MapLocation { planet: Earth, x: 10, y: 18 }, MapLocation { planet: Earth, x: 11, y: 19 }, MapLocation { planet: Earth, x: 12, y: 19 }, MapLocation { planet: Earth, x: 10, y: 19 }, MapLocation { planet: Earth, x: 13, y: 19 }]<br>[MapLocation { planet: Earth, x: 16, y: 19 }, MapLocation { planet: Earth, x: 16, y: 18 }, MapLocation { planet: Earth, x: 15, y: 18 }, MapLocation { planet: Earth, x: 15, y: 19 }, MapLocation { planet: Earth, x: 15, y: 17 }, MapLocation { planet: Earth, x: 14, y: 17 }, MapLocation { planet: Earth, x: 14, y: 18 }, MapLocation { planet: Earth, x: 14, y: 19 }, MapLocation { planet: Earth, x: 15, y: 16 }, MapLocation { planet: Earth, x: 14, y: 16 }]<br>[MapLocation { planet: Earth, x: 4, y: 1 }, MapLocation { planet: Earth, x: 4, y: 2 }, MapLocation { planet: Earth, x: 4, y: 0 }, MapLocation { planet: Earth, x: 3, y: 0 }, MapLocation { planet: Earth, x: 3, y: 1 }, MapLocation { planet: Earth, x: 3, y: 2 }, MapLocation { planet: Earth, x: 4, y: 3 }, MapLocation { planet: Earth, x: 5, y: 3 }, MapLocation { planet: Earth, x: 3, y: 3 }, MapLocation { planet: Earth, x: 2, y: 0 }]<br>[MapLocation { planet: Earth, x: 2, y: 3 }, MapLocation { planet: Earth, x: 2, y: 4 }, MapLocation { planet: Earth, x: 3, y: 4 }, MapLocation { planet: Earth, x: 2, y: 2 }, MapLocation { planet: Earth, x: 1, y: 2 }, MapLocation { planet: Earth, x: 1, y: 3 }, MapLocation { planet: Earth, x: 1, y: 4 }, MapLocation { planet: Earth, x: 2, y: 5 }, MapLocation { planet: Earth, x: 3, y: 5 }, MapLocation { planet: Earth, x: 1, y: 5 }]<br>[MapLocation { planet: Earth, x: 0, y: 6 }, MapLocation { planet: Earth, x: 0, y: 7 }, MapLocation { planet: Earth, x: 1, y: 7 }, MapLocation { planet: Earth, x: 1, y: 6 }, MapLocation { planet: Earth, x: 0, y: 5 }, MapLocation { planet: Earth, x: 0, y: 8 }, MapLocation { planet: Earth, x: 1, y: 8 }, MapLocation { planet: Earth, x: 2, y: 7 }, MapLocation { planet: Earth, x: 2, y: 6 }, MapLocation { planet: Earth, x: 0, y: 4 }]<br>[MapLocation { planet: Earth, x: 1, y: 9 }, MapLocation { planet: Earth, x: 1, y: 10 }, MapLocation { planet: Earth, x: 0, y: 9 }, MapLocation { planet: Earth, x: 0, y: 10 }, MapLocation { planet: Earth, x: 1, y: 11 }, MapLocation { planet: Earth, x: 0, y: 11 }, MapLocation { planet: Earth, x: 1, y: 12 }, MapLocation { planet: Earth, x: 2, y: 12 }, MapLocation { planet: Earth, x: 0, y: 12 }, MapLocation { planet: Earth, x: 1, y: 13 }]<br>[MapLocation { planet: Earth, x: 2, y: 13 }, MapLocation { planet: Earth, x: 2, y: 14 }, MapLocation { planet: Earth, x: 3, y: 14 }, MapLocation { planet: Earth, x: 1, y: 14 }, MapLocation { planet: Earth, x: 2, y: 15 }, MapLocation { planet: Earth, x: 3, y: 15 }, MapLocation { planet: Earth, x: 1, y: 15 }, MapLocation { planet: Earth, x: 4, y: 15 }, MapLocation { planet: Earth, x: 0, y: 13 }, MapLocation { planet: Earth, x: 0, y: 14 }]<br>[MapLocation { planet: Earth, x: 3, y: 16 }, MapLocation { planet: Earth, x: 3, y: 17 }, MapLocation { planet: Earth, x: 4, y: 17 }, MapLocation { planet: Earth, x: 4, y: 16 }, MapLocation { planet: Earth, x: 2, y: 16 }, MapLocation { planet: Earth, x: 2, y: 17 }, MapLocation { planet: Earth, x: 3, y: 18 }, MapLocation { planet: Earth, x: 4, y: 18 }, MapLocation { planet: Earth, x: 2, y: 18 }, MapLocation { planet: Earth, x: 5, y: 18 }]<br>[MapLocation { planet: Earth, x: 6, y: 19 }, MapLocation { planet: Earth, x: 7, y: 19 }, MapLocation { planet: Earth, x: 7, y: 18 }, MapLocation { planet: Earth, x: 6, y: 18 }, MapLocation { planet: Earth, x: 5, y: 19 }, MapLocation { planet: Earth, x: 8, y: 19 }, MapLocation { planet: Earth, x: 6, y: 17 }, MapLocation { planet: Earth, x: 5, y: 17 }, MapLocation { planet: Earth, x: 4, y: 19 }, MapLocation { planet: Earth, x: 9, y: 19 }]<br>[MapLocation { planet: Earth, x: 3, y: 19 }, MapLocation { planet: Earth, x: 2, y: 19 }, MapLocation { planet: Earth, x: 1, y: 18 }, MapLocation { planet: Earth, x: 1, y: 19 }, MapLocation { planet: Earth, x: 1, y: 17 }, MapLocation { planet: Earth, x: 0, y: 17 }, MapLocation { planet: Earth, x: 0, y: 18 }, MapLocation { planet: Earth, x: 0, y: 19 }, MapLocation { planet: Earth, x: 1, y: 16 }, MapLocation { planet: Earth, x: 0, y: 16 }]<br>[MapLocation { planet: Earth, x: 18, y: 7 }, MapLocation { planet: Earth, x: 18, y: 8 }, MapLocation { planet: Earth, x: 19, y: 8 }, MapLocation { planet: Earth, x: 19, y: 7 }, MapLocation { planet: Earth, x: 19, y: 6 }, MapLocation { planet: Earth, x: 18, y: 6 }, MapLocation { planet: Earth, x: 17, y: 6 }, MapLocation { planet: Earth, x: 17, y: 7 }, MapLocation { planet: Earth, x: 17, y: 8 }, MapLocation { planet: Earth, x: 18, y: 9 }]<br>[MapLocation { planet: Earth, x: 16, y: 7 }, MapLocation { planet: Earth, x: 16, y: 8 }, MapLocation { planet: Earth, x: 16, y: 6 }, MapLocation { planet: Earth, x: 15, y: 6 }, MapLocation { planet: Earth, x: 15, y: 7 }, MapLocation { planet: Earth, x: 15, y: 8 }, MapLocation { planet: Earth, x: 16, y: 9 }, MapLocation { planet: Earth, x: 17, y: 9 }, MapLocation { planet: Earth, x: 15, y: 9 }, MapLocation { planet: Earth, x: 17, y: 5 }]<br>[MapLocation { planet: Earth, x: 14, y: 10 }, MapLocation { planet: Earth, x: 14, y: 11 }, MapLocation { planet: Earth, x: 15, y: 11 }, MapLocation { planet: Earth, x: 15, y: 10 }, MapLocation { planet: Earth, x: 14, y: 9 }, MapLocation { planet: Earth, x: 13, y: 9 }, MapLocation { planet: Earth, x: 13, y: 10 }, MapLocation { planet: Earth, x: 13, y: 11 }, MapLocation { planet: Earth, x: 14, y: 12 }, MapLocation { planet: Earth, x: 15, y: 12 }]<br>[MapLocation { planet: Earth, x: 18, y: 5 }, MapLocation { planet: Earth, x: 19, y: 5 }, MapLocation { planet: Earth, x: 19, y: 4 }, MapLocation { planet: Earth, x: 18, y: 4 }, MapLocation { planet: Earth, x: 17, y: 4 }, MapLocation { planet: Earth, x: 19, y: 3 }, MapLocation { planet: Earth, x: 18, y: 3 }, MapLocation { planet: Earth, x: 17, y: 3 }, MapLocation { planet: Earth, x: 16, y: 3 }, MapLocation { planet: Earth, x: 16, y: 4 }]<br>[MapLocation { planet: Earth, x: 14, y: 7 }, MapLocation { planet: Earth, x: 14, y: 8 }, MapLocation { planet: Earth, x: 14, y: 6 }, MapLocation { planet: Earth, x: 13, y: 6 }, MapLocation { planet: Earth, x: 13, y: 7 }, MapLocation { planet: Earth, x: 13, y: 8 }, MapLocation { planet: Earth, x: 15, y: 5 }, MapLocation { planet: Earth, x: 14, y: 5 }, MapLocation { planet: Earth, x: 13, y: 5 }, MapLocation { planet: Earth, x: 12, y: 5 }]<br>[MapLocation { planet: Earth, x: 15, y: 13 }, MapLocation { planet: Earth, x: 15, y: 14 }, MapLocation { planet: Earth, x: 16, y: 14 }, MapLocation { planet: Earth, x: 16, y: 13 }, MapLocation { planet: Earth, x: 16, y: 12 }, MapLocation { planet: Earth, x: 14, y: 13 }, MapLocation { planet: Earth, x: 14, y: 14 }, MapLocation { planet: Earth, x: 15, y: 15 }, MapLocation { planet: Earth, x: 16, y: 15 }, MapLocation { planet: Earth, x: 14, y: 15 }]<br>[MapLocation { planet: Earth, x: 15, y: 2 }, MapLocation { planet: Earth, x: 15, y: 3 }, MapLocation { planet: Earth, x: 16, y: 2 }, MapLocation { planet: Earth, x: 16, y: 1 }, MapLocation { planet: Earth, x: 15, y: 1 }, MapLocation { planet: Earth, x: 14, y: 1 }, MapLocation { planet: Earth, x: 14, y: 2 }, MapLocation { planet: Earth, x: 14, y: 3 }, MapLocation { planet: Earth, x: 15, y: 4 }, MapLocation { planet: Earth, x: 14, y: 4 }]<br>[MapLocation { planet: Earth, x: 13, y: 13 }, MapLocation { planet: Earth, x: 13, y: 14 }, MapLocation { planet: Earth, x: 13, y: 12 }, MapLocation { planet: Earth, x: 12, y: 12 }, MapLocation { planet: Earth, x: 12, y: 13 }, MapLocation { planet: Earth, x: 12, y: 14 }, MapLocation { planet: Earth, x: 13, y: 15 }, MapLocation { planet: Earth, x: 12, y: 15 }, MapLocation { planet: Earth, x: 12, y: 11 }, MapLocation { planet: Earth, x: 11, y: 11 }]<br>[MapLocation { planet: Earth, x: 16, y: 5 }]<br>[MapLocation { planet: Earth, x: 17, y: 11 }, MapLocation { planet: Earth, x: 17, y: 12 }, MapLocation { planet: Earth, x: 18, y: 12 }, MapLocation { planet: Earth, x: 18, y: 11 }, MapLocation { planet: Earth, x: 18, y: 10 }, MapLocation { planet: Earth, x: 17, y: 10 }, MapLocation { planet: Earth, x: 16, y: 10 }, MapLocation { planet: Earth, x: 16, y: 11 }, MapLocation { planet: Earth, x: 17, y: 13 }, MapLocation { planet: Earth, x: 18, y: 13 }]<br>[MapLocation { planet: Earth, x: 17, y: 10 }]<br>[MapLocation { planet: Earth, x: 18, y: 2 }, MapLocation { planet: Earth, x: 19, y: 2 }, MapLocation { planet: Earth, x: 19, y: 1 }, MapLocation { planet: Earth, x: 18, y: 1 }, MapLocation { planet: Earth, x: 17, y: 1 }, MapLocation { planet: Earth, x: 17, y: 2 }, MapLocation { planet: Earth, x: 19, y: 0 }, MapLocation { planet: Earth, x: 18, y: 0 }, MapLocation { planet: Earth, x: 17, y: 0 }, MapLocation { planet: Earth, x: 16, y: 0 }]<br>[MapLocation { planet: Earth, x: 16, y: 5 }]<br>[MapLocation { planet: Earth, x: 12, y: 10 }, MapLocation { planet: Earth, x: 12, y: 9 }, MapLocation { planet: Earth, x: 11, y: 9 }, MapLocation { planet: Earth, x: 11, y: 10 }, MapLocation { planet: Earth, x: 12, y: 8 }, MapLocation { planet: Earth, x: 11, y: 8 }, MapLocation { planet: Earth, x: 10, y: 8 }, MapLocation { planet: Earth, x: 10, y: 9 }, MapLocation { planet: Earth, x: 10, y: 10 }, MapLocation { planet: Earth, x: 10, y: 11 }]<br>[MapLocation { planet: Earth, x: 17, y: 14 }, MapLocation { planet: Earth, x: 17, y: 15 }, MapLocation { planet: Earth, x: 18, y: 15 }, MapLocation { planet: Earth, x: 18, y: 14 }, MapLocation { planet: Earth, x: 17, y: 16 }, MapLocation { planet: Earth, x: 18, y: 16 }, MapLocation { planet: Earth, x: 16, y: 16 }, MapLocation { planet: Earth, x: 19, y: 16 }, MapLocation { planet: Earth, x: 19, y: 15 }, MapLocation { planet: Earth, x: 19, y: 14 }]<br>[MapLocation { planet: Earth, x: 12, y: 4 }, MapLocation { planet: Earth, x: 13, y: 4 }, MapLocation { planet: Earth, x: 13, y: 3 }, MapLocation { planet: Earth, x: 12, y: 3 }, MapLocation { planet: Earth, x: 11, y: 3 }, MapLocation { planet: Earth, x: 11, y: 4 }, MapLocation { planet: Earth, x: 11, y: 5 }, MapLocation { planet: Earth, x: 13, y: 2 }, MapLocation { planet: Earth, x: 12, y: 2 }, MapLocation { planet: Earth, x: 11, y: 2 }]<br>[MapLocation { planet: Earth, x: 19, y: 11 }, MapLocation { planet: Earth, x: 19, y: 12 }, MapLocation { planet: Earth, x: 19, y: 10 }, MapLocation { planet: Earth, x: 19, y: 13 }, MapLocation { planet: Earth, x: 19, y: 9 }]<br>[MapLocation { planet: Earth, x: 12, y: 7 }, MapLocation { planet: Earth, x: 12, y: 6 }, MapLocation { planet: Earth, x: 11, y: 6 }, MapLocation { planet: Earth, x: 11, y: 7 }, MapLocation { planet: Earth, x: 10, y: 5 }, MapLocation { planet: Earth, x: 10, y: 6 }, MapLocation { planet: Earth, x: 10, y: 7 }, MapLocation { planet: Earth, x: 10, y: 4 }, MapLocation { planet: Earth, x: 9, y: 4 }, MapLocation { planet: Earth, x: 9, y: 5 }]<br>[MapLocation { planet: Earth, x: 18, y: 10 }]<br>[MapLocation { planet: Earth, x: 9, y: 7 }, MapLocation { planet: Earth, x: 9, y: 8 }, MapLocation { planet: Earth, x: 9, y: 6 }, MapLocation { planet: Earth, x: 8, y: 6 }, MapLocation { planet: Earth, x: 8, y: 7 }, MapLocation { planet: Earth, x: 8, y: 8 }, MapLocation { planet: Earth, x: 9, y: 9 }, MapLocation { planet: Earth, x: 8, y: 9 }, MapLocation { planet: Earth, x: 8, y: 5 }, MapLocation { planet: Earth, x: 7, y: 5 }]<br>[MapLocation { planet: Earth, x: 10, y: 3 }, MapLocation { planet: Earth, x: 10, y: 2 }, MapLocation { planet: Earth, x: 9, y: 3 }, MapLocation { planet: Earth, x: 11, y: 1 }, MapLocation { planet: Earth, x: 10, y: 1 }, MapLocation { planet: Earth, x: 8, y: 4 }, MapLocation { planet: Earth, x: 12, y: 1 }, MapLocation { planet: Earth, x: 12, y: 0 }, MapLocation { planet: Earth, x: 11, y: 0 }, MapLocation { planet: Earth, x: 10, y: 0 }]<br>[MapLocation { planet: Earth, x: 9, y: 11 }, MapLocation { planet: Earth, x: 9, y: 12 }, MapLocation { planet: Earth, x: 10, y: 12 }, MapLocation { planet: Earth, x: 9, y: 10 }, MapLocation { planet: Earth, x: 8, y: 10 }, MapLocation { planet: Earth, x: 8, y: 11 }, MapLocation { planet: Earth, x: 8, y: 12 }, MapLocation { planet: Earth, x: 9, y: 13 }, MapLocation { planet: Earth, x: 10, y: 13 }, MapLocation { planet: Earth, x: 8, y: 13 }]<br>[MapLocation { planet: Earth, x: 19, y: 17 }, MapLocation { planet: Earth, x: 19, y: 18 }, MapLocation { planet: Earth, x: 18, y: 17 }, MapLocation { planet: Earth, x: 18, y: 18 }, MapLocation { planet: Earth, x: 19, y: 19 }, MapLocation { planet: Earth, x: 18, y: 19 }, MapLocation { planet: Earth, x: 17, y: 17 }, MapLocation { planet: Earth, x: 17, y: 18 }, MapLocation { planet: Earth, x: 17, y: 19 }, MapLocation { planet: Earth, x: 16, y: 17 }]<br>[MapLocation { planet: Earth, x: 12, y: 6 }]<br>[MapLocation { planet: Earth, x: 7, y: 13 }, MapLocation { planet: Earth, x: 7, y: 14 }, MapLocation { planet: Earth, x: 8, y: 14 }, MapLocation { planet: Earth, x: 7, y: 12 }, MapLocation { planet: Earth, x: 6, y: 12 }, MapLocation { planet: Earth, x: 6, y: 13 }, MapLocation { planet: Earth, x: 8, y: 15 }, MapLocation { planet: Earth, x: 9, y: 15 }, MapLocation { planet: Earth, x: 9, y: 14 }, MapLocation { planet: Earth, x: 7, y: 11 }]<br>[MapLocation { planet: Earth, x: 5, y: 12 }, MapLocation { planet: Earth, x: 6, y: 11 }, MapLocation { planet: Earth, x: 5, y: 11 }, MapLocation { planet: Earth, x: 7, y: 10 }, MapLocation { planet: Earth, x: 6, y: 10 }, MapLocation { planet: Earth, x: 5, y: 10 }, MapLocation { planet: Earth, x: 7, y: 9 }, MapLocation { planet: Earth, x: 6, y: 9 }, MapLocation { planet: Earth, x: 5, y: 9 }, MapLocation { planet: Earth, x: 7, y: 8 }]<br>[MapLocation { planet: Earth, x: 11, y: 12 }, MapLocation { planet: Earth, x: 11, y: 13 }, MapLocation { planet: Earth, x: 11, y: 14 }, MapLocation { planet: Earth, x: 10, y: 14 }, MapLocation { planet: Earth, x: 11, y: 15 }, MapLocation { planet: Earth, x: 10, y: 15 }, MapLocation { planet: Earth, x: 11, y: 16 }, MapLocation { planet: Earth, x: 12, y: 16 }, MapLocation { planet: Earth, x: 10, y: 16 }, MapLocation { planet: Earth, x: 9, y: 16 }]<br>[MapLocation { planet: Earth, x: 9, y: 0 }, MapLocation { planet: Earth, x: 8, y: 0 }, MapLocation { planet: Earth, x: 7, y: 0 }, MapLocation { planet: Earth, x: 7, y: 1 }, MapLocation { planet: Earth, x: 6, y: 0 }, MapLocation { planet: Earth, x: 6, y: 1 }, MapLocation { planet: Earth, x: 6, y: 2 }, MapLocation { planet: Earth, x: 5, y: 0 }, MapLocation { planet: Earth, x: 5, y: 1 }, MapLocation { planet: Earth, x: 5, y: 2 }]<br>[MapLocation { planet: Earth, x: 7, y: 7 }, MapLocation { planet: Earth, x: 7, y: 6 }, MapLocation { planet: Earth, x: 6, y: 6 }, MapLocation { planet: Earth, x: 6, y: 7 }, MapLocation { planet: Earth, x: 6, y: 8 }, MapLocation { planet: Earth, x: 5, y: 7 }, MapLocation { planet: Earth, x: 5, y: 8 }]<br>[MapLocation { planet: Earth, x: 11, y: 17 }, MapLocation { planet: Earth, x: 11, y: 18 }, MapLocation { planet: Earth, x: 12, y: 18 }, MapLocation { planet: Earth, x: 12, y: 17 }, MapLocation { planet: Earth, x: 10, y: 17 }, MapLocation { planet: Earth, x: 10, y: 18 }, MapLocation { planet: Earth, x: 11, y: 19 }, MapLocation { planet: Earth, x: 12, y: 19 }, MapLocation { planet: Earth, x: 10, y: 19 }, MapLocation { planet: Earth, x: 13, y: 19 }]<br>[MapLocation { planet: Earth, x: 16, y: 19 }, MapLocation { planet: Earth, x: 16, y: 18 }, MapLocation { planet: Earth, x: 15, y: 18 }, MapLocation { planet: Earth, x: 15, y: 19 }, MapLocation { planet: Earth, x: 15, y: 17 }, MapLocation { planet: Earth, x: 14, y: 17 }, MapLocation { planet: Earth, x: 14, y: 18 }, MapLocation { planet: Earth, x: 14, y: 19 }, MapLocation { planet: Earth, x: 15, y: 16 }, MapLocation { planet: Earth, x: 14, y: 16 }]<br>[MapLocation { planet: Earth, x: 17, y: 2 }]<br>[MapLocation { planet: Earth, x: 19, y: 10 }]<br>[MapLocation { planet: Earth, x: 11, y: 6 }]<br>[MapLocation { planet: Earth, x: 13, y: 0 }, MapLocation { planet: Earth, x: 13, y: 1 }, MapLocation { planet: Earth, x: 14, y: 0 }, MapLocation { planet: Earth, x: 15, y: 0 }]<br>[MapLocation { planet: Earth, x: 4, y: 1 }, MapLocation { planet: Earth, x: 4, y: 2 }, MapLocation { planet: Earth, x: 4, y: 0 }, MapLocation { planet: Earth, x: 3, y: 0 }, MapLocation { planet: Earth, x: 3, y: 1 }, MapLocation { planet: Earth, x: 3, y: 2 }, MapLocation { planet: Earth, x: 4, y: 3 }, MapLocation { planet: Earth, x: 5, y: 3 }, MapLocation { planet: Earth, x: 3, y: 3 }, MapLocation { planet: Earth, x: 2, y: 0 }]<br>[MapLocation { planet: Earth, x: 13, y: 16 }, MapLocation { planet: Earth, x: 13, y: 17 }, MapLocation { planet: Earth, x: 13, y: 18 }]<br>[MapLocation { planet: Earth, x: 15, y: 16 }]<br>[MapLocation { planet: Earth, x: 13, y: 4 }]<br>[MapLocation { planet: Earth, x: 11, y: 12 }]<br>[MapLocation { planet: Earth, x: 2, y: 3 }, MapLocation { planet: Earth, x: 2, y: 4 }, MapLocation { planet: Earth, x: 3, y: 4 }, MapLocation { planet: Earth, x: 2, y: 2 }, MapLocation { planet: Earth, x: 1, y: 2 }, MapLocation { planet: Earth, x: 1, y: 3 }, MapLocation { planet: Earth, x: 1, y: 4 }, MapLocation { planet: Earth, x: 2, y: 5 }, MapLocation { planet: Earth, x: 3, y: 5 }, MapLocation { planet: Earth, x: 1, y: 5 }]<br>[MapLocation { planet: Earth, x: 13, y: 17 }]<br>[MapLocation { planet: Earth, x: 13, y: 1 }]<br>[MapLocation { planet: Earth, x: 7, y: 10 }]<br>[MapLocation { planet: Earth, x: 14, y: 16 }]<br>[MapLocation { planet: Earth, x: 0, y: 6 }, MapLocation { planet: Earth, x: 0, y: 7 }, MapLocation { planet: Earth, x: 1, y: 7 }, MapLocation { planet: Earth, x: 1, y: 6 }, MapLocation { planet: Earth, x: 0, y: 5 }, MapLocation { planet: Earth, x: 0, y: 8 }, MapLocation { planet: Earth, x: 1, y: 8 }, MapLocation { planet: Earth, x: 2, y: 7 }, MapLocation { planet: Earth, x: 2, y: 6 }, MapLocation { planet: Earth, x: 0, y: 4 }]<br>[MapLocation { planet: Earth, x: 13, y: 16 }]<br>[MapLocation { planet: Earth, x: 2, y: 1 }, MapLocation { planet: Earth, x: 1, y: 0 }, MapLocation { planet: Earth, x: 1, y: 1 }, MapLocation { planet: Earth, x: 0, y: 0 }, MapLocation { planet: Earth, x: 0, y: 1 }, MapLocation { planet: Earth, x: 0, y: 2 }, MapLocation { planet: Earth, x: 0, y: 3 }]<br>[MapLocation { planet: Earth, x: 8, y: 4 }]<br>[MapLocation { planet: Earth, x: 1, y: 9 }, MapLocation { planet: Earth, x: 1, y: 10 }, MapLocation { planet: Earth, x: 0, y: 9 }, MapLocation { planet: Earth, x: 0, y: 10 }, MapLocation { planet: Earth, x: 1, y: 11 }, MapLocation { planet: Earth, x: 0, y: 11 }, MapLocation { planet: Earth, x: 1, y: 12 }, MapLocation { planet: Earth, x: 2, y: 12 }, MapLocation { planet: Earth, x: 0, y: 12 }, MapLocation { planet: Earth, x: 1, y: 13 }]<br>[MapLocation { planet: Earth, x: 13, y: 12 }]<br>[MapLocation { planet: Earth, x: 2, y: 13 }, MapLocation { planet: Earth, x: 2, y: 14 }, MapLocation { planet: Earth, x: 3, y: 14 }, MapLocation { planet: Earth, x: 1, y: 14 }, MapLocation { planet: Earth, x: 2, y: 15 }, MapLocation { planet: Earth, x: 3, y: 15 }, MapLocation { planet: Earth, x: 1, y: 15 }, MapLocation { planet: Earth, x: 4, y: 15 }, MapLocation { planet: Earth, x: 0, y: 13 }, MapLocation { planet: Earth, x: 0, y: 14 }]<br>[MapLocation { planet: Earth, x: 12, y: 9 }]<br>[MapLocation { planet: Earth, x: 4, y: 4 }]<br>[MapLocation { planet: Earth, x: 11, y: 14 }]<br>[MapLocation { planet: Earth, x: 15, y: 4 }]<br>[MapLocation { planet: Earth, x: 1, y: 1 }]<br>[MapLocation { planet: Earth, x: 3, y: 16 }, MapLocation { planet: Earth, x: 3, y: 17 }, MapLocation { planet: Earth, x: 4, y: 17 }, MapLocation { planet: Earth, x: 4, y: 16 }, MapLocation { planet: Earth, x: 2, y: 16 }, MapLocation { planet: Earth, x: 2, y: 17 }, MapLocation { planet: Earth, x: 3, y: 18 }, MapLocation { planet: Earth, x: 4, y: 18 }, MapLocation { planet: Earth, x: 2, y: 18 }, MapLocation { planet: Earth, x: 5, y: 18 }]<br>[MapLocation { planet: Earth, x: 6, y: 19 }, MapLocation { planet: Earth, x: 7, y: 19 }, MapLocation { planet: Earth, x: 7, y: 18 }, MapLocation { planet: Earth, x: 6, y: 18 }, MapLocation { planet: Earth, x: 5, y: 19 }, MapLocation { planet: Earth, x: 8, y: 19 }, MapLocation { planet: Earth, x: 6, y: 17 }, MapLocation { planet: Earth, x: 5, y: 17 }, MapLocation { planet: Earth, x: 4, y: 19 }, MapLocation { planet: Earth, x: 9, y: 19 }]<br>[MapLocation { planet: Earth, x: 3, y: 19 }, MapLocation { planet: Earth, x: 2, y: 19 }, MapLocation { planet: Earth, x: 1, y: 18 }, MapLocation { planet: Earth, x: 1, y: 19 }, MapLocation { planet: Earth, x: 1, y: 17 }, MapLocation { planet: Earth, x: 0, y: 17 }, MapLocation { planet: Earth, x: 0, y: 18 }, MapLocation { planet: Earth, x: 0, y: 19 }, MapLocation { planet: Earth, x: 1, y: 16 }, MapLocation { planet: Earth, x: 0, y: 16 }]<br>[MapLocation { planet: Earth, x: 12, y: 8 }]<br>[MapLocation { planet: Earth, x: 19, y: 13 }]<br>[MapLocation { planet: Earth, x: 11, y: 13 }]<br>[MapLocation { planet: Earth, x: 15, y: 5 }]<br>[MapLocation { planet: Earth, x: 5, y: 16 }]<br>[MapLocation { planet: Earth, x: 9, y: 10 }]<br>[MapLocation { planet: Earth, x: 16, y: 11 }]<br>[MapLocation { planet: Earth, x: 9, y: 8 }]<br>[MapLocation { planet: Earth, x: 13, y: 16 }]<br>[MapLocation { planet: Earth, x: 13, y: 18 }]<br>[MapLocation { planet: Earth, x: 10, y: 14 }]<br>[MapLocation { planet: Earth, x: 16, y: 10 }]<br>[MapLocation { planet: Earth, x: 15, y: 17 }]<br>[MapLocation { planet: Earth, x: 0, y: 3 }]<br>[MapLocation { planet: Earth, x: 5, y: 16 }]<br>[MapLocation { planet: Earth, x: 19, y: 9 }]<br>[MapLocation { planet: Earth, x: 7, y: 9 }]<br>[MapLocation { planet: Earth, x: 16, y: 5 }]<br>[MapLocation { planet: Earth, x: 0, y: 15 }]<br>[MapLocation { planet: Earth, x: 1, y: 16 }]<br>[MapLocation { planet: Earth, x: 15, y: 0 }]<br>[MapLocation { planet: Earth, x: 10, y: 12 }]<br>[MapLocation { planet: Earth, x: 14, y: 8 }]<br>Round 25 time: 194<br>Round 26 time: 0<br>Round 27 time: 7<br>Round 28 time: 0<br>Round 29 time: 0<br>Round 30 time: 0<br>Round 31 time: 0<br>Round 32 time: 0<br>Round 33 time: 0<br>Round 34 time: 0<br>Round 35 time: 1<br>Round 36 time: 0<br>Round 37 time: 0<br>Round 38 time: 3<br>Round 39 time: 0<br>Round 40 time: 0<br>Round 41 time: 1<br>Round 42 time: 0<br>Round 43 time: 0<br>Round 44 time: 0<br>Round 45 time: 0<br>Round 46 time: 0<br>Round 47 time: 0<br>Round 48 time: 0<br>Round 49 time: 0<br>Round 50 time: 0<br>Round 51 time: 0<br>Round 52 time: 0<br>Round 53 time: 1<br>Round 54 time: 2<br>Round 55 time: 4<br>Round 56 time: 0<br>Round 57 time: 0<br>Round 58 time: 12<br>Round 59 time: 0<br>Round 60 time: 0<br>Round 61 time: 0<br>Round 62 time: 0<br>Round 63 time: 2<br>Round 64 time: 0<br>Round 65 time: 0<br>Round 66 time: 1<br>Round 67 time: 0<br>Round 68 time: 2<br>Round 69 time: 0<br>Round 70 time: 0<br>Round 71 time: 2<br>Round 72 time: 6<br>Round 73 time: 0<br>Round 74 time: 0<br>Round 75 time: 0<br>Round 76 time: 0<br>Round 77 time: 0<br>Round 78 time: 0<br>Round 79 time: 1<br>Round 80 time: 2<br>Round 81 time: 1<br>Round 82 time: 8<br>Round 83 time: 0<br>Round 84 time: 0<br>Round 85 time: 0<br>Round 86 time: 0<br>Round 87 time: 0<br>Round 88 time: 0<br>Round 89 time: 0<br>Round 90 time: 0<br>Round 91 time: 0<br>Round 92 time: 3<br>Round 93 time: 3<br>Round 94 time: 4<br>Round 95 time: 3<br>Round 96 time: 5<br>Round 97 time: 7<br>Round 98 time: 3<br>Round 99 time: 0<br>Round 100 time: 0<br>Round 101 time: 7<br>Round 102 time: 0<br>Round 103 time: 0<br>Round 104 time: 0<br>Round 105 time: 0<br>Round 106 time: 0<br>Round 107 time: 0<br>Round 108 time: 0<br>Round 109 time: 0<br>Round 110 time: 0<br>Round 111 time: 0<br>Round 112 time: 7<br>Round 113 time: 0<br>Round 114 time: 0<br>Round 115 time: 0<br>Round 116 time: 0<br>Round 117 time: 0<br>Round 118 time: 0<br>Round 119 time: 0<br>Round 120 time: 0<br>Round 121 time: 0<br>Round 122 time: 2<br>Round 123 time: 0<br>Round 124 time: 1<br>Round 125 time: 0<br>Round 126 time: 2<br>Round 127 time: 7<br>Round 128 time: 0<br>Round 129 time: 5<br>Round 130 time: 3<br>Round 131 time: 0<br>Round 132 time: 3<br>Round 133 time: 0<br>Round 134 time: 0<br>Round 135 time: 0<br>Round 136 time: 0<br>Round 137 time: 0<br>Round 138 time: 0<br>Round 139 time: 0<br>Round 140 time: 0<br>Round 141 time: 1<br>Round 142 time: 0<br>Round 143 time: 0<br>Round 144 time: 0<br>Round 145 time: 0<br>Round 146 time: 0<br>Round 147 time: 0<br>Round 148 time: 0<br>Round 149 time: 0<br>Round 150 time: 0<br>Round 151 time: 0<br>Round 152 time: 0<br>Round 153 time: 0<br>Round 154 time: 0<br>Round 155 time: 0<br>Round 156 time: 0<br>Round 157 time: 3<br>Round 158 time: 0<br>Round 159 time: 2<br>Round 160 time: 0<br>Round 161 time: 0<br>Round 162 time: 0<br>Round 163 time: 0<br>Round 164 time: 0<br>Round 165 time: 4<br>Round 166 time: 6<br>Round 167 time: 3<br>Round 168 time: 0<br>Round 169 time: 0<br>Round 170 time: 0<br>Round 171 time: 3<br>Round 172 time: 0<br>Round 173 time: 0<br>Round 174 time: 0<br>Round 175 time: 0<br>Round 176 time: 0<br>Round 177 time: 0<br>Round 178 time: 2<br>Round 179 time: 0<br>Round 180 time: 0<br>Round 181 time: 1<br>Round 182 time: 1<br>Round 183 time: 0<br>Round 184 time: 0<br>Round 185 time: 0<br>Round 186 time: 0<br>Round 187 time: 0<br>Round 188 time: 0<br>Round 189 time: 0<br>Round 190 time: 0<br>Round 191 time: 4<br>Round 192 time: 0<br>Round 193 time: 0<br>Round 194 time: 0<br>Round 195 time: 0<br>Round 196 time: 0<br>Round 197 time: 0<br>Round 198 time: 0<br>Round 199 time: 0<br>Round 200 time: 0<br>Round 201 time: 0<br>Round 202 time: 0<br>Round 203 time: 0<br>Round 204 time: 1<br>Round 205 time: 4<br>Round 206 time: 0<br>Round 207 time: 0<br>Round 208 time: 0<br>Round 209 time: 0<br>Round 210 time: 0<br>Round 211 time: 1<br>Round 212 time: 0<br>Round 213 time: 0<br>Round 214 time: 2<br>Round 215 time: 0<br>Round 216 time: 0<br>Round 217 time: 0<br>Round 218 time: 0<br>Round 219 time: 0<br>Round 220 time: 0<br>Round 221 time: 1<br>Round 222 time: 0<br>Round 223 time: 0<br>Round 224 time: 0<br>Round 225 time: 0<br>Round 226 time: 0<br>Round 227 time: 0<br>Round 228 time: 16<br>Round 229 time: 0<br>Round 230 time: 0<br>Round 231 time: 0<br>Round 232 time: 0<br>Round 233 time: 0<br>Round 234 time: 0<br>Round 235 time: 4<br>Round 236 time: 0<br>Round 237 time: 0<br>Round 238 time: 0<br>Round 239 time: 0<br>Round 240 time: 0<br>Round 241 time: 0<br>Round 242 time: 0<br>Round 243 time: 0<br>Round 244 time: 0<br>Round 245 time: 0<br>Round 246 time: 0<br>Round 247 time: 0<br>Round 248 time: 0<br>Round 249 time: 0<br>Round 250 time: 0<br>Round 251 time: 0<br>Round 252 time: 0<br>Round 253 time: 1<br>Round 254 time: 0<br>Round 255 time: 0<br>Round 256 time: 5<br>Round 257 time: 2<br>Round 258 time: 1<br>Round 259 time: 0<br>Round 260 time: 0<br>Round 261 time: 0<br>Round 262 time: 1<br>Round 263 time: 0<br>Round 264 time: 0<br>Round 265 time: 0<br>Round 266 time: 0<br>Round 267 time: 0<br>Round 268 time: 0<br>Round 269 time: 0<br>Round 270 time: 0<br>Round 271 time: 0<br>Round 272 time: 0<br>Round 273 time: 1<br>Round 274 time: 0<br>Round 275 time: 3<br>Round 276 time: 0<br>Round 277 time: 0<br>Round 278 time: 10<br>Round 279 time: 0<br>Round 280 time: 0<br>Round 281 time: 0<br>Round 282 time: 0<br>Round 283 time: 0<br>Round 284 time: 0<br>Round 285 time: 0<br>Round 286 time: 0<br>Round 287 time: 1<br>Round 288 time: 0<br>Round 289 time: 1<br>Round 290 time: 0<br>Round 291 time: 2<br>Round 292 time: 0<br>Round 293 time: 0<br>Round 294 time: 0<br>Round 295 time: 0<br>Round 296 time: 0<br>Round 297 time: 0<br>Round 298 time: 0<br>Round 299 time: 0<br>Round 300 time: 0<br>Round 301 time: 0<br>Round 302 time: 0<br>Round 303 time: 0<br>Round 304 time: 0<br>Round 305 time: 1<br>Round 306 time: 0<br>Round 307 time: 0<br>Round 308 time: 0<br>Round 309 time: 0<br>Round 310 time: 0<br>Round 311 time: 0<br>Round 312 time: 0<br>Round 313 time: 0<br>Round 314 time: 0<br>Round 315 time: 7<br>Round 316 time: 0<br>Round 317 time: 0<br>Round 318 time: 0<br>Round 319 time: 0<br>Round 320 time: 0<br>Round 321 time: 0<br>Round 322 time: 0<br>Round 323 time: 0<br>Round 324 time: 0<br>Round 325 time: 0<br>Round 326 time: 0<br>Round 327 time: 0<br>Round 328 time: 0<br>Round 329 time: 0<br>Round 330 time: 0<br>Round 331 time: 0<br>Round 332 time: 0<br>Round 333 time: 0<br>Round 334 time: 0<br>Round 335 time: 0<br>Round 336 time: 0<br>Round 337 time: 0<br>Round 338 time: 1<br>Round 339 time: 0<br>Round 340 time: 0<br>Round 341 time: 0<br>Round 342 time: 0<br>Round 343 time: 3<br>Round 344 time: 0<br>Round 345 time: 0<br>Round 346 time: 1<br>Round 347 time: 0<br>Round 348 time: 0<br>Round 349 time: 0<br>Round 350 time: 0<br>Round 351 time: 0<br>Round 352 time: 0<br>Round 353 time: 4<br>Round 354 time: 0<br>Round 355 time: 0<br>Round 356 time: 0<br>Round 357 time: 0<br>Round 358 time: 1<br>Round 359 time: 0<br>Round 360 time: 0<br>Round 361 time: 0<br>Round 362 time: 0<br></p>
+                </div>
+            </div>
+            <div class="tile is-parent">
+                <div class="tile is-child box" style="overflow:scroll">
+                    <p class="title">Red Mars</p>
+                    <p id="red_mars">javac ./Mage.java ./HashableLocation.java ./Knight.java ./RangerRushProtocol.java ./BuildHomeProtocol.java ./Player.java ./Rocket.java ./MapUtil.java ./Ranger.java ./Worker.java ./Protocol.java ./Healer.java ./Factory.java -classpath ../battlecode/java<br>java -classpath .:../battlecode/java Player<br>-- Starting battlecode java engine, vroom vroom! --<br>-- Note: you may get a warning about stack guards, please ignore it. --<br>Loading linux library: /battlecode/java/bc/libbattlecode-java-linux.so<br>Java HotSpot(TM) 64-Bit Server VM warning: You have loaded library /battlecode/java/bc/libbattlecode-java-linux.so which might have disabled stack guard. The VM will try to fix the stack guard now.<br>It's highly recommended that you fix the library with 'execstack -c &lt;libfile&gt;', or link it with '-z noexecstack'.<br>-- Engine loaded. --<br>Player connecting to unix:///tmp/battlecode-socket<br>Successfully connected to the manager!<br>Round 1 time: 0<br>Round 2 time: 4<br>Round 3 time: 0<br>Round 4 time: 0<br>Round 5 time: 0<br>Round 6 time: 0<br>Round 7 time: 0<br>Round 8 time: 0<br>Round 9 time: 0<br>Round 10 time: 0<br>Round 11 time: 0<br>Round 12 time: 0<br>Round 13 time: 0<br>Round 14 time: 0<br>Round 15 time: 0<br>Round 16 time: 1<br>Round 17 time: 0<br>Round 18 time: 0<br>Round 19 time: 0<br>Round 20 time: 3<br>Round 21 time: 0<br>Round 22 time: 0<br>Round 23 time: 0<br>Round 24 time: 0<br>Round 25 time: 0<br>Round 26 time: 0<br>Round 27 time: 0<br>Round 28 time: 0<br>Round 29 time: 0<br>Round 30 time: 0<br>Round 31 time: 0<br>Round 32 time: 0<br>Round 33 time: 0<br>Round 34 time: 0<br>Round 35 time: 0<br>Round 36 time: 1<br>Round 37 time: 0<br>Round 38 time: 0<br>Round 39 time: 0<br>Round 40 time: 0<br>Round 41 time: 0<br>Round 42 time: 1<br>Round 43 time: 0<br>Round 44 time: 0<br>Round 45 time: 0<br>Round 46 time: 0<br>Round 47 time: 0<br>Round 48 time: 0<br>Round 49 time: 0<br>Round 50 time: 0<br>Round 51 time: 0<br>Round 52 time: 0<br>Round 53 time: 0<br>Round 54 time: 0<br>Round 55 time: 0<br>Round 56 time: 0<br>Round 57 time: 0<br>Round 58 time: 0<br>Round 59 time: 0<br>Round 60 time: 0<br>Round 61 time: 0<br>Round 62 time: 0<br>Round 63 time: 0<br>Round 64 time: 0<br>Round 65 time: 0<br>Round 66 time: 0<br>Round 67 time: 0<br>Round 68 time: 0<br>Round 69 time: 0<br>Round 70 time: 0<br>Round 71 time: 0<br>Round 72 time: 0<br>Round 73 time: 0<br>Round 74 time: 0<br>Round 75 time: 0<br>Round 76 time: 0<br>Round 77 time: 0<br>Round 78 time: 0<br>Round 79 time: 0<br>Round 80 time: 0<br>Round 81 time: 0<br>Round 82 time: 3<br>Round 83 time: 1<br>Round 84 time: 0<br>Round 85 time: 0<br>Round 86 time: 0<br>Round 87 time: 0<br>Round 88 time: 0<br>Round 89 time: 0<br>Round 90 time: 0<br>Round 91 time: 0<br>Round 92 time: 0<br>Round 93 time: 0<br>Round 94 time: 0<br>Round 95 time: 0<br>Round 96 time: 0<br>Round 97 time: 0<br>Round 98 time: 0<br>Round 99 time: 0<br>Round 100 time: 0<br>Round 101 time: 0<br>Round 102 time: 0<br>Round 103 time: 0<br>Round 104 time: 0<br>Round 105 time: 0<br>Round 106 time: 0<br>Round 107 time: 0<br>Round 108 time: 0<br>Round 109 time: 0<br>Round 110 time: 0<br>Round 111 time: 0<br>Round 112 time: 0<br>Round 113 time: 0<br>Round 114 time: 0<br>Round 115 time: 0<br>Round 116 time: 0<br>Round 117 time: 0<br>Round 118 time: 0<br>Round 119 time: 0<br>Round 120 time: 8<br>Round 121 time: 0<br>Round 122 time: 0<br>Round 123 time: 0<br>Round 124 time: 3<br>Round 125 time: 0<br>Round 126 time: 0<br>Round 127 time: 0<br>Round 128 time: 0<br>Round 129 time: 0<br>Round 130 time: 3<br>Round 131 time: 0<br>Round 132 time: 0<br>Round 133 time: 0<br>Round 134 time: 4<br>Round 135 time: 0<br>Round 136 time: 0<br>Round 137 time: 0<br>Round 138 time: 0<br>Round 139 time: 0<br>Round 140 time: 2<br>Round 141 time: 5<br>Round 142 time: 0<br>Round 143 time: 0<br>Round 144 time: 0<br>Round 145 time: 0<br>Round 146 time: 0<br>Round 147 time: 0<br>Round 148 time: 0<br>Round 149 time: 0<br>Round 150 time: 1<br>Round 151 time: 0<br>Round 152 time: 0<br>Round 153 time: 0<br>Round 154 time: 0<br>Round 155 time: 1<br>Round 156 time: 0<br>Round 157 time: 1<br>Round 158 time: 0<br>Round 159 time: 0<br>Round 160 time: 0<br>Round 161 time: 0<br>Round 162 time: 0<br>Round 163 time: 0<br>Round 164 time: 1<br>Round 165 time: 0<br>Round 166 time: 0<br>Round 167 time: 0<br>Round 168 time: 0<br>Round 169 time: 3<br>Round 170 time: 0<br>Round 171 time: 0<br>Round 172 time: 0<br>Round 173 time: 0<br>Round 174 time: 0<br>Round 175 time: 0<br>Round 176 time: 0<br>Round 177 time: 0<br>Round 178 time: 0<br>Round 179 time: 0<br>Round 180 time: 0<br>Round 181 time: 0<br>Round 182 time: 3<br>Round 183 time: 0<br>Round 184 time: 0<br>Round 185 time: 0<br>Round 186 time: 0<br>Round 187 time: 0<br>Round 188 time: 0<br>Round 189 time: 0<br>Round 190 time: 0<br>Round 191 time: 0<br>Round 192 time: 0<br>Round 193 time: 0<br>Round 194 time: 0<br>Round 195 time: 0<br>Round 196 time: 0<br>Round 197 time: 0<br>Round 198 time: 0<br>Round 199 time: 0<br>Round 200 time: 0<br>Round 201 time: 0<br>Round 202 time: 0<br>Round 203 time: 0<br>Round 204 time: 6<br>Round 205 time: 0<br>Round 206 time: 0<br>Round 207 time: 0<br>Round 208 time: 0<br>Round 209 time: 0<br>Round 210 time: 1<br>Round 211 time: 1<br>Round 212 time: 0<br>Round 213 time: 0<br>Round 214 time: 0<br>Round 215 time: 0<br>Round 216 time: 0<br>Round 217 time: 2<br>Round 218 time: 0<br>Round 219 time: 0<br>Round 220 time: 0<br>Round 221 time: 0<br>Round 222 time: 0<br>Round 223 time: 0<br>Round 224 time: 0<br>Round 225 time: 0<br>Round 226 time: 0<br>Round 227 time: 0<br>Round 228 time: 0<br>Round 229 time: 0<br>Round 230 time: 0<br>Round 231 time: 0<br>Round 232 time: 0<br>Round 233 time: 0<br>Round 234 time: 1<br>Round 235 time: 0<br>Round 236 time: 0<br>Round 237 time: 7<br>Round 238 time: 0<br>Round 239 time: 1<br>Round 240 time: 0<br>Round 241 time: 0<br>Round 242 time: 0<br>Round 243 time: 0<br>Round 244 time: 0<br>Round 245 time: 0<br>Round 246 time: 0<br>Round 247 time: 0<br>Round 248 time: 0<br>Round 249 time: 7<br>Round 250 time: 0<br>Round 251 time: 0<br>Round 252 time: 0<br>Round 253 time: 0<br>Round 254 time: 0<br>Round 255 time: 1<br>Round 256 time: 0<br>Round 257 time: 0<br>Round 258 time: 0<br>Round 259 time: 0<br>Round 260 time: 0<br>Round 261 time: 0<br>Round 262 time: 0<br>Round 263 time: 0<br>Round 264 time: 0<br>Round 265 time: 0<br>Round 266 time: 1<br>Round 267 time: 0<br>Round 268 time: 0<br>Round 269 time: 0<br>Round 270 time: 0<br>Round 271 time: 0<br>Round 272 time: 1<br>Round 273 time: 0<br>Round 274 time: 0<br>Round 275 time: 0<br>Round 276 time: 0<br>Round 277 time: 0<br>Round 278 time: 0<br>Round 279 time: 0<br>Round 280 time: 0<br>Round 281 time: 0<br>Round 282 time: 0<br>Round 283 time: 1<br>Round 284 time: 0<br>Round 285 time: 0<br>Round 286 time: 0<br>Round 287 time: 0<br>Round 288 time: 3<br>Round 289 time: 0<br>Round 290 time: 1<br>Round 291 time: 0<br>Round 292 time: 0<br>Round 293 time: 0<br>Round 294 time: 0<br>Round 295 time: 0<br>Round 296 time: 0<br>Round 297 time: 8<br>Round 298 time: 1<br>Round 299 time: 0<br>Round 300 time: 0<br>Round 301 time: 2<br>Round 302 time: 0<br>Round 303 time: 0<br>Round 304 time: 0<br>Round 305 time: 0<br>Round 306 time: 0<br>Round 307 time: 0<br>Round 308 time: 0<br>Round 309 time: 0<br>Round 310 time: 0<br>Round 311 time: 0<br>Round 312 time: 0<br>Round 313 time: 5<br>Round 314 time: 0<br>Round 315 time: 0<br>Round 316 time: 0<br>Round 317 time: 0<br>Round 318 time: 0<br>Round 319 time: 0<br>Round 320 time: 0<br>Round 321 time: 0<br>Round 322 time: 0<br>Round 323 time: 1<br>Round 324 time: 0<br>Round 325 time: 1<br>Round 326 time: 0<br>Round 327 time: 0<br>Round 328 time: 1<br>Round 329 time: 0<br>Round 330 time: 3<br>Round 331 time: 0<br>Round 332 time: 0<br>Round 333 time: 0<br>Round 334 time: 0<br>Round 335 time: 0<br>Round 336 time: 0<br>Round 337 time: 0<br>Round 338 time: 0<br>Round 339 time: 0<br>Round 340 time: 0<br>Round 341 time: 0<br>Round 342 time: 0<br>Round 343 time: 0<br>Round 344 time: 0<br>Round 345 time: 0<br>Round 346 time: 1<br>Round 347 time: 0<br>Round 348 time: 0<br>Round 349 time: 0<br>Round 350 time: 3<br>Round 351 time: 1<br>Round 352 time: 0<br>Round 353 time: 0<br>Round 354 time: 0<br>Round 355 time: 0<br>Round 356 time: 0<br>Round 357 time: 0<br>Round 358 time: 0<br>Round 359 time: 1<br>Round 360 time: 0<br>Round 361 time: 0<br>Round 362 time: 0<br></p>
+                </div>
+            </div>
+            <div class="tile is-parent">
+                <div class="tile is-child box" style="overflow:scroll">
+                    <p class="title">Blue Earth</p>
+                    <p id="blue_earth">javac ./Player.java ./Extra.java -classpath ../battlecode/java<br>java -classpath .:../battlecode/java Player<br>Extra: 27<br>-- Starting battlecode java engine, vroom vroom! --<br>-- Note: you may get a warning about stack guards, please ignore it. --<br>Loading linux library: /battlecode/java/bc/libbattlecode-java-linux.so<br>Java HotSpot(TM) 64-Bit Server VM warning: You have loaded library /battlecode/java/bc/libbattlecode-java-linux.so which might have disabled stack guard. The VM will try to fix the stack guard now.<br>It's highly recommended that you fix the library with 'execstack -c &lt;libfile&gt;', or link it with '-z noexecstack'.<br>-- Engine loaded. --<br>loc: MapLocation { planet: Earth, x: 10, y: 20 }, one step to the Northwest: MapLocation { planet: Earth, x: 9, y: 21 }<br>loc x: 10<br>Opposite of North: South<br>Player connecting to unix:///tmp/battlecode-socket<br>Successfully connected to the manager!<br>Current round: 1<br>Current round: 2<br>Current round: 3<br>Current round: 4<br>Current round: 5<br>Current round: 6<br>Current round: 7<br>Current round: 8<br>Current round: 9<br>Current round: 10<br>Current round: 11<br>Current round: 12<br>Current round: 13<br>Current round: 14<br>Current round: 15<br>Current round: 16<br>Current round: 17<br>Current round: 18<br>Current round: 19<br>Current round: 20<br>Current round: 21<br>Current round: 22<br>Current round: 23<br>Current round: 24<br>Current round: 25<br>Current round: 26<br>Current round: 27<br>Current round: 28<br>Current round: 29<br>Current round: 30<br>Current round: 31<br>Current round: 32<br>Current round: 33<br>Current round: 34<br>Current round: 35<br>Current round: 36<br>Current round: 37<br>Current round: 38<br>Current round: 39<br>Current round: 40<br>Current round: 41<br>Current round: 42<br>Current round: 43<br>Current round: 44<br>Current round: 45<br>Current round: 46<br>Current round: 47<br>Current round: 48<br>Current round: 49<br>Current round: 50<br>Current round: 51<br>Current round: 52<br>Current round: 53<br>Current round: 54<br>Current round: 55<br>Current round: 56<br>Current round: 57<br>Current round: 58<br>Current round: 59<br>Current round: 60<br>Current round: 61<br>Current round: 62<br>Current round: 63<br>Current round: 64<br>Current round: 65<br>Current round: 66<br>Current round: 67<br>Current round: 68<br>Current round: 69<br>Current round: 70<br>Current round: 71<br>Current round: 72<br>Current round: 73<br>Current round: 74<br>Current round: 75<br>Current round: 76<br>Current round: 77<br>Current round: 78<br>Current round: 79<br>Current round: 80<br>Current round: 81<br>Current round: 82<br>Current round: 83<br>Current round: 84<br>Current round: 85<br>Current round: 86<br>Current round: 87<br>Current round: 88<br>Current round: 89<br>Current round: 90<br>Current round: 91<br>Current round: 92<br>Current round: 93<br>Current round: 94<br>Current round: 95<br>Current round: 96<br>Current round: 97<br>Current round: 98<br>Current round: 99<br>Current round: 100<br>Current round: 101<br>Current round: 102<br>Current round: 103<br>Current round: 104<br>Current round: 105<br>Current round: 106<br>Current round: 107<br>Current round: 108<br>Current round: 109<br>Current round: 110<br>Current round: 111<br>Current round: 112<br>Current round: 113<br>Current round: 114<br>Current round: 115<br>Current round: 116<br>Current round: 117<br>Current round: 118<br>Current round: 119<br>Current round: 120<br>Current round: 121<br>Current round: 122<br>Current round: 123<br>Current round: 124<br>Current round: 125<br>Current round: 126<br>Current round: 127<br>Current round: 128<br>Current round: 129<br>Current round: 130<br>Current round: 131<br>Current round: 132<br>Current round: 133<br>Current round: 134<br>Current round: 135<br>Current round: 136<br>Current round: 137<br>Current round: 138<br>Current round: 139<br>Current round: 140<br>Current round: 141<br>Current round: 142<br>Current round: 143<br>Current round: 144<br>Current round: 145<br>Current round: 146<br>Current round: 147<br>Current round: 148<br>Current round: 149<br>Current round: 150<br>Current round: 151<br>Current round: 152<br>Current round: 153<br>Current round: 154<br>Current round: 155<br>Current round: 156<br>Current round: 157<br>Current round: 158<br>Current round: 159<br>Current round: 160<br>Current round: 161<br>Current round: 162<br>Current round: 163<br>Current round: 164<br>Current round: 165<br>Current round: 166<br>Current round: 167<br>Current round: 168<br>Current round: 169<br>Current round: 170<br>Current round: 171<br>Current round: 172<br>Current round: 173<br>Current round: 174<br>Current round: 175<br>Current round: 176<br>Current round: 177<br>Current round: 178<br>Current round: 179<br>Current round: 180<br>Current round: 181<br>Current round: 182<br>Current round: 183<br>Current round: 184<br>Current round: 185<br>Current round: 186<br>Current round: 187<br>Current round: 188<br>Current round: 189<br>Current round: 190<br>Current round: 191<br>Current round: 192<br>Current round: 193<br>Current round: 194<br>Current round: 195<br>Current round: 196<br>Current round: 197<br>Current round: 198<br>Current round: 199<br>Current round: 200<br>Current round: 201<br>Current round: 202<br>Current round: 203<br>Current round: 204<br>Current round: 205<br>Current round: 206<br>Current round: 207<br>Current round: 208<br>Current round: 209<br>Current round: 210<br>Current round: 211<br>Current round: 212<br>Current round: 213<br>Current round: 214<br>Current round: 215<br>Current round: 216<br>Current round: 217<br>Current round: 218<br>Current round: 219<br>Current round: 220<br>Current round: 221<br>Current round: 222<br>Current round: 223<br>Current round: 224<br>Current round: 225<br>Current round: 226<br>Current round: 227<br>Current round: 228<br>Current round: 229<br>Current round: 230<br>Current round: 231<br>Current round: 232<br>Current round: 233<br>Current round: 234<br>Current round: 235<br>Current round: 236<br>Current round: 237<br>Current round: 238<br>Current round: 239<br>Current round: 240<br>Current round: 241<br>Current round: 242<br>Current round: 243<br>Current round: 244<br>Current round: 245<br>Current round: 246<br>Current round: 247<br>Current round: 248<br>Current round: 249<br>Current round: 250<br>Current round: 251<br>Current round: 252<br>Current round: 253<br>Current round: 254<br>Current round: 255<br>Current round: 256<br>Current round: 257<br>Current round: 258<br>Current round: 259<br>Current round: 260<br>Current round: 261<br>Current round: 262<br>Current round: 263<br>Current round: 264<br>Current round: 265<br>Current round: 266<br>Current round: 267<br>Current round: 268<br>Current round: 269<br>Current round: 270<br>Current round: 271<br>Current round: 272<br>Current round: 273<br>Current round: 274<br>Current round: 275<br>Current round: 276<br>Current round: 277<br>Current round: 278<br>Current round: 279<br>Current round: 280<br>Current round: 281<br>Current round: 282<br>Current round: 283<br>Current round: 284<br>Current round: 285<br>Current round: 286<br>Current round: 287<br>Current round: 288<br>Current round: 289<br>Current round: 290<br>Current round: 291<br>Current round: 292<br>Current round: 293<br>Current round: 294<br>Current round: 295<br>Current round: 296<br>Current round: 297<br>Current round: 298<br>Current round: 299<br>Current round: 300<br>Current round: 301<br>Current round: 302<br>Current round: 303<br>Current round: 304<br>Current round: 305<br>Current round: 306<br>Current round: 307<br>Current round: 308<br>Current round: 309<br>Current round: 310<br>Current round: 311<br>Current round: 312<br>Current round: 313<br>Current round: 314<br>Current round: 315<br>Current round: 316<br>Current round: 317<br>Current round: 318<br>Current round: 319<br>Current round: 320<br>Current round: 321<br>Current round: 322<br>Current round: 323<br>Current round: 324<br>Current round: 325<br>Current round: 326<br>Current round: 327<br>Current round: 328<br>Current round: 329<br>Current round: 330<br>Current round: 331<br>Current round: 332<br>Current round: 333<br>Current round: 334<br>Current round: 335<br>Current round: 336<br>Current round: 337<br>Current round: 338<br>Current round: 339<br>Current round: 340<br>Current round: 341<br>Current round: 342<br>Current round: 343<br>Current round: 344<br>Current round: 345<br>Current round: 346<br>Current round: 347<br>Current round: 348<br>Current round: 349<br>Current round: 350<br>Current round: 351<br>Current round: 352<br>Current round: 353<br>Current round: 354<br>Current round: 355<br>Current round: 356<br>Current round: 357<br>Current round: 358<br>Current round: 359<br>Current round: 360<br>Current round: 361<br>Current round: 362<br></p>
+                </div>
+            </div>
+            <div class="tile is-parent">
+                <div class="tile is-child box" style="overflow:scroll">
+                    <p class="title">Blue Mars</p>
+                    <p id="blue_mars">javac ./Player.java ./Extra.java -classpath ../battlecode/java<br>java -classpath .:../battlecode/java Player<br>Extra: 27<br>-- Starting battlecode java engine, vroom vroom! --<br>-- Note: you may get a warning about stack guards, please ignore it. --<br>Loading linux library: /battlecode/java/bc/libbattlecode-java-linux.so<br>Java HotSpot(TM) 64-Bit Server VM warning: You have loaded library /battlecode/java/bc/libbattlecode-java-linux.so which might have disabled stack guard. The VM will try to fix the stack guard now.<br>It's highly recommended that you fix the library with 'execstack -c &lt;libfile&gt;', or link it with '-z noexecstack'.<br>-- Engine loaded. --<br>loc: MapLocation { planet: Earth, x: 10, y: 20 }, one step to the Northwest: MapLocation { planet: Earth, x: 9, y: 21 }<br>loc x: 10<br>Opposite of North: South<br>Player connecting to unix:///tmp/battlecode-socket<br>Successfully connected to the manager!<br>Current round: 1<br>Current round: 2<br>Current round: 3<br>Current round: 4<br>Current round: 5<br>Current round: 6<br>Current round: 7<br>Current round: 8<br>Current round: 9<br>Current round: 10<br>Current round: 11<br>Current round: 12<br>Current round: 13<br>Current round: 14<br>Current round: 15<br>Current round: 16<br>Current round: 17<br>Current round: 18<br>Current round: 19<br>Current round: 20<br>Current round: 21<br>Current round: 22<br>Current round: 23<br>Current round: 24<br>Current round: 25<br>Current round: 26<br>Current round: 27<br>Current round: 28<br>Current round: 29<br>Current round: 30<br>Current round: 31<br>Current round: 32<br>Current round: 33<br>Current round: 34<br>Current round: 35<br>Current round: 36<br>Current round: 37<br>Current round: 38<br>Current round: 39<br>Current round: 40<br>Current round: 41<br>Current round: 42<br>Current round: 43<br>Current round: 44<br>Current round: 45<br>Current round: 46<br>Current round: 47<br>Current round: 48<br>Current round: 49<br>Current round: 50<br>Current round: 51<br>Current round: 52<br>Current round: 53<br>Current round: 54<br>Current round: 55<br>Current round: 56<br>Current round: 57<br>Current round: 58<br>Current round: 59<br>Current round: 60<br>Current round: 61<br>Current round: 62<br>Current round: 63<br>Current round: 64<br>Current round: 65<br>Current round: 66<br>Current round: 67<br>Current round: 68<br>Current round: 69<br>Current round: 70<br>Current round: 71<br>Current round: 72<br>Current round: 73<br>Current round: 74<br>Current round: 75<br>Current round: 76<br>Current round: 77<br>Current round: 78<br>Current round: 79<br>Current round: 80<br>Current round: 81<br>Current round: 82<br>Current round: 83<br>Current round: 84<br>Current round: 85<br>Current round: 86<br>Current round: 87<br>Current round: 88<br>Current round: 89<br>Current round: 90<br>Current round: 91<br>Current round: 92<br>Current round: 93<br>Current round: 94<br>Current round: 95<br>Current round: 96<br>Current round: 97<br>Current round: 98<br>Current round: 99<br>Current round: 100<br>Current round: 101<br>Current round: 102<br>Current round: 103<br>Current round: 104<br>Current round: 105<br>Current round: 106<br>Current round: 107<br>Current round: 108<br>Current round: 109<br>Current round: 110<br>Current round: 111<br>Current round: 112<br>Current round: 113<br>Current round: 114<br>Current round: 115<br>Current round: 116<br>Current round: 117<br>Current round: 118<br>Current round: 119<br>Current round: 120<br>Current round: 121<br>Current round: 122<br>Current round: 123<br>Current round: 124<br>Current round: 125<br>Current round: 126<br>Current round: 127<br>Current round: 128<br>Current round: 129<br>Current round: 130<br>Current round: 131<br>Current round: 132<br>Current round: 133<br>Current round: 134<br>Current round: 135<br>Current round: 136<br>Current round: 137<br>Current round: 138<br>Current round: 139<br>Current round: 140<br>Current round: 141<br>Current round: 142<br>Current round: 143<br>Current round: 144<br>Current round: 145<br>Current round: 146<br>Current round: 147<br>Current round: 148<br>Current round: 149<br>Current round: 150<br>Current round: 151<br>Current round: 152<br>Current round: 153<br>Current round: 154<br>Current round: 155<br>Current round: 156<br>Current round: 157<br>Current round: 158<br>Current round: 159<br>Current round: 160<br>Current round: 161<br>Current round: 162<br>Current round: 163<br>Current round: 164<br>Current round: 165<br>Current round: 166<br>Current round: 167<br>Current round: 168<br>Current round: 169<br>Current round: 170<br>Current round: 171<br>Current round: 172<br>Current round: 173<br>Current round: 174<br>Current round: 175<br>Current round: 176<br>Current round: 177<br>Current round: 178<br>Current round: 179<br>Current round: 180<br>Current round: 181<br>Current round: 182<br>Current round: 183<br>Current round: 184<br>Current round: 185<br>Current round: 186<br>Current round: 187<br>Current round: 188<br>Current round: 189<br>Current round: 190<br>Current round: 191<br>Current round: 192<br>Current round: 193<br>Current round: 194<br>Current round: 195<br>Current round: 196<br>Current round: 197<br>Current round: 198<br>Current round: 199<br>Current round: 200<br>Current round: 201<br>Current round: 202<br>Current round: 203<br>Current round: 204<br>Current round: 205<br>Current round: 206<br>Current round: 207<br>Current round: 208<br>Current round: 209<br>Current round: 210<br>Current round: 211<br>Current round: 212<br>Current round: 213<br>Current round: 214<br>Current round: 215<br>Current round: 216<br>Current round: 217<br>Current round: 218<br>Current round: 219<br>Current round: 220<br>Current round: 221<br>Current round: 222<br>Current round: 223<br>Current round: 224<br>Current round: 225<br>Current round: 226<br>Current round: 227<br>Current round: 228<br>Current round: 229<br>Current round: 230<br>Current round: 231<br>Current round: 232<br>Current round: 233<br>Current round: 234<br>Current round: 235<br>Current round: 236<br>Current round: 237<br>Current round: 238<br>Current round: 239<br>Current round: 240<br>Current round: 241<br>Current round: 242<br>Current round: 243<br>Current round: 244<br>Current round: 245<br>Current round: 246<br>Current round: 247<br>Current round: 248<br>Current round: 249<br>Current round: 250<br>Current round: 251<br>Current round: 252<br>Current round: 253<br>Current round: 254<br>Current round: 255<br>Current round: 256<br>Current round: 257<br>Current round: 258<br>Current round: 259<br>Current round: 260<br>Current round: 261<br>Current round: 262<br>Current round: 263<br>Current round: 264<br>Current round: 265<br>Current round: 266<br>Current round: 267<br>Current round: 268<br>Current round: 269<br>Current round: 270<br>Current round: 271<br>Current round: 272<br>Current round: 273<br>Current round: 274<br>Current round: 275<br>Current round: 276<br>Current round: 277<br>Current round: 278<br>Current round: 279<br>Current round: 280<br>Current round: 281<br>Current round: 282<br>Current round: 283<br>Current round: 284<br>Current round: 285<br>Current round: 286<br>Current round: 287<br>Current round: 288<br>Current round: 289<br>Current round: 290<br>Current round: 291<br>Current round: 292<br>Current round: 293<br>Current round: 294<br>Current round: 295<br>Current round: 296<br>Current round: 297<br>Current round: 298<br>Current round: 299<br>Current round: 300<br>Current round: 301<br>Current round: 302<br>Current round: 303<br>Current round: 304<br>Current round: 305<br>Current round: 306<br>Current round: 307<br>Current round: 308<br>Current round: 309<br>Current round: 310<br>Current round: 311<br>Current round: 312<br>Current round: 313<br>Current round: 314<br>Current round: 315<br>Current round: 316<br>Current round: 317<br>Current round: 318<br>Current round: 319<br>Current round: 320<br>Current round: 321<br>Current round: 322<br>Current round: 323<br>Current round: 324<br>Current round: 325<br>Current round: 326<br>Current round: 327<br>Current round: 328<br>Current round: 329<br>Current round: 330<br>Current round: 331<br>Current round: 332<br>Current round: 333<br>Current round: 334<br>Current round: 335<br>Current round: 336<br>Current round: 337<br>Current round: 338<br>Current round: 339<br>Current round: 340<br>Current round: 341<br>Current round: 342<br>Current round: 343<br>Current round: 344<br>Current round: 345<br>Current round: 346<br>Current round: 347<br>Current round: 348<br>Current round: 349<br>Current round: 350<br>Current round: 351<br>Current round: 352<br>Current round: 353<br>Current round: 354<br>Current round: 355<br>Current round: 356<br>Current round: 357<br>Current round: 358<br>Current round: 359<br>Current round: 360<br>Current round: 361<br></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <footer class="footer">
+        <div class="container">
+            <div class="content has-text-centered">
+                <p>
+                    <strong>Battlecode: Escape to Mars</strong> by <a href="http://battlecode.org/">MIT Battlecode</a>. Version 0.12.1
+                </p>
+            </div>
+        </div>
+    </footer>
+    <div class="modal" id="upload_modal">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+            <header class="modal-card-head">
+                <p class="modal-card-title">Upload Bot</p>
+                <button onclick="close_upload()" class="delete" aria-label="close"></button>
+            </header>
+            <div class="modal-card-body">
+                <div class="notification is-warning" style="display:none" id="upload-error">
+                    <button class="delete" onclick="document.getElementById(&#39;upload-error&#39;).style.display=&#39;none&#39;"></button>
+                    <strong> Upload failed. </strong> <span id="upload-error-text"></span>
+                </div>
+                <div class="content">
+                    <table class="table is-fullwidth"><tbody>
+                        <tr>
+                            <td>Username</td>
+                            <td><input class="input" type="text" id="upload_username"></td>
+                        </tr>
+                        <tr>
+                            <td>Password</td>
+                            <td><input class="input" type="password" id="upload_password"></td>
+                        </tr>
+                        <tr>
+                            <td>Player Directory</td>
+                            <td><div class="select" style="width:100%">
+                                <select style="width:100%" id="upload_players">
+                                <option value="CattleCode">CattleCode</option><option value="examplefuncsplayer-c">examplefuncsplayer-c</option><option value="examplefuncsplayer-java">examplefuncsplayer-java</option><option value="examplefuncsplayer-python">examplefuncsplayer-python</option></select>
+                            </div></td>
+                        </tr>
+
+                        <tr>
+                            <td>Upload Name</td>
+                            <td><input class="input" type="text" value="bot 1" id="upload_name"></td>
+                        </tr>
+                    </tbody></table>
+                    <button id="upload" class="button is-success" align="right">
+                        <span class="icon">
+                            <i class="fa fa-rocket"></i>
+                        </span>
+                        <span>Upload bot</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="download_modal">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+            <div class="modal-card">
+                <div class="modal-card-head">
+                    <span style="float:right">
+                        <p class="title">
+                        Download Logs
+                        </p>
+                    </span>
+                    <span styple="text-align:right; widht:100%; float:right" align="right">
+                        <a onclick="close_download()" style="float:right" class="button" align="right">
+                            <span class="icon">
+                                <i class="fa fa-window-close"></i>
+                        </span></a><br><br>
+                    </span>
+                </div>
+                <div class="modal-card-body">
+                <article class="tile is-child notification is-white">
+                    <div class="content">
+                        <div class="content">
+                            <div class="field">
+                                
+                                    Log File Name
+                                    <input class="input" type="text" value="logs.txt" id="download_file_name">
+                                
+                            </div>
+                            <button id="download" class="button is-success" align="right">
+                                <span class="icon">
+                                    <i class="fa fa-download"></i>
+                                </span>
+                                <span>Download logs</span>
+                            </button>
+                        </div>
+                    </div>
+                </article>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="./Battlecode &#39;18_files/eel.js.download"></script>
+
+    <script>
+
+    var viewer_cache = {}
+    var view_latest = true;
+
+    var modal = document.getElementById("upload_modal")
+    var html = document.querySelector('html');
+    var earth = document.getElementById("earth");
+    var mars = document.getElementById("mars");
+    var slider = document.getElementById("slider");
+    var turn_field = document.getElementById("turn_field")
+    var log_modal = document.getElementById("download_modal")
+
+    function alert_error(message) {
+        document.getElementById('warning-text').innerText = message;
+        document.getElementById('warning').style.display='block';
+    }
+
+    function report_winner(winner) {
+        message = winner==1 ? "red team" : "blue team";
+        document.getElementById('winner-text').innerText = message;
+        document.getElementById('winner').style.display='block';
+    }
+
+    function upload_success(message) {
+        document.getElementById('upload-text').innerText = message;
+        document.getElementById('upload-report').style.display='block';
+        document.getElementById('upload-error').style.display='none';
+    }
+
+    function upload_error(message) {
+        document.getElementById('upload-error-text').innerText = message;
+        document.getElementById('upload-error').style.display='block';
+    }
+
+    function draw_grid(canvas, width, height, pixels, earth)  {
+        var p = 10;
+        var b = 2;
+
+        var s = p-2*b
+        canvas.width = 10*width + 2*p;
+        canvas.height = 10*height + 2*p;
+
+        var cw = 10*width + (p*2) + 1;
+        var ch = 10*height + (p*2) + 1;
+
+
+        context = canvas.getContext("2d");
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        context.fillStyle = earth ? "#6FB76F" : "#FF8F66";
+        context.fillRect(p,p,10*width,10*height);
+        context.font = "9px monospace";
+        for (var i=0; i<pixels.length; i+=2) {
+            row = height - Math.floor((i/2)/width) - 1;
+            col = (i/2)%width;
+
+            x_in = 1.5*p + col*p - s/2
+            y_in = 1.5*p + row*p - s/2
+
+            if (pixels[i+1]==0) {
+                context.fillStyle="#ff0000";
+                context.fillRect(x_in,y_in,s+1,s+1);
+            } else if (pixels[i+1]==1) {
+                context.fillStyle="#0000ff";
+                context.fillRect(x_in,y_in,s+1,s+1);
+            } else if (pixels[i] != 0) {
+                context.fillStyle="#000000"
+                context.fillRect(x_in-b,y_in-b,s+1 + 2*b,s+1 + 2*b);
+            }
+
+            vals = ['W','K','R','M','H','F','^']
+            if (pixels[i+1]==0 || pixels[i+1]==1) {
+                context.fillStyle="#ffffff";
+                char = vals[pixels[i]-1];
+                context.fillText(char,x_in+b/2,y_in+s);
+            }
+        }
+
+        for (var x = 0; x <= 10*width; x += 10) {
+            context.moveTo(0.5 + x + p, p);
+            context.lineTo(0.5 + x + p, 10*height + p);
+        } for (var x = 0; x <= 10*height; x += 10) {
+            context.moveTo(p, 0.5 + x + p);
+            context.lineTo(10*width + p, 0.5 + x + p);
+        } context.strokeStyle = "black";
+        context.stroke();
+
+
+    }
+
+    window.onload = async function() {
+        maps = await eel.get_maps()();
+        folders = await eel.get_player_dirs()();
+
+        red = document.getElementById("red")
+        blue = document.getElementById("blue")
+        upload = document.getElementById("upload_players")
+        folders.forEach(function(folder) {
+            if (folder.charAt(0) != '.') {
+                red.innerHTML += "<option value='" + folder + "'>" + folder + "</option>";
+                blue.innerHTML += "<option value='" + folder + "'>" + folder + "</option>";
+                upload .innerHTML +="<option value='" + folder + "'>" + folder + "</option>";
+            }
+        });
+
+        mapselect = document.getElementById("map")
+        maps.forEach(function(map) {
+            if (map.charAt(0) != '.') {
+                mapselect.innerHTML += "<option value='" + map + "'>" + map + "</option>";
+            }
+        });
+    }
+
+    var interval = null;
+
+    function validate(params) {
+        if (isNaN(params['player_memory'])) {
+            alert_error("Must give a numeric amount of memory in mb.");
+            return false;
+        } else if (parseInt(params['player_memory'] < 100)) {
+            alert_error("Must give at least 100mb of memory.");
+            return false;
+        } else {
+            params['player_memory'] = parseInt(params['player_memory']);
+        }
+
+        params['player_cpu'] = 100;
+
+        if (isNaN(params['time_pool'])) {
+            alert_error("Must give a numeric initial time pool.");
+            return false;
+        } else {
+            params['time_pool'] = parseInt(params['time_pool'])
+        }
+
+        if (isNaN(params['time_additional'])) {
+            alert_error("Must give a numeric additional time per turn.");
+            return false;
+        } else {
+            params['time_additional'] = parseInt(params['time_additional'])
+        }
+
+        if (!params['replay_filename']) {
+            alert_error('Must enter a replay filename.')
+            return false;
+        }
+
+        params['use_viewer'] = 1;//(params['use_viewer'] == '1');
+        document.getElementById('warning').style.display='none';
+
+        return true;
+    }
+
+    function trigger_save_logs() {
+      download_modal.classList.add('is-active')
+    }
+
+   function close_download(){
+      download_modal.classList.remove('is-active')
+   }
+
+    function trigger_exit_viewer() {
+        document.getElementById('runner_view').style.display = "block";
+        document.getElementById('running_view').style.display = "none";
+        viewer_cache = {}
+        clearInterval(interval);
+        eel.end_game();
+   }
+
+   function close_upload(){
+      modal.classList.remove('is-active')
+   }
+
+   function upload_modal(){
+      modal.classList.add('is-active')
+
+   }
+
+    eel.expose(trigger_end_game);
+    function trigger_end_game(winner) {
+        eel.end_game();
+        report_winner(winner);
+    }
+
+
+    slider.addEventListener('input', function (evt) {
+        view_latest = false;
+
+        render_turn(this.value);
+    });
+
+    function use_latest() {
+        view_latest = true;
+    }
+
+    async function render_turn(turn) {
+        var maps = (turn in viewer_cache) ? viewer_cache[turn] : await eel.get_viewer_data(4*turn)();
+
+        draw_grid(earth,maps['earth_width'],maps['earth_height'],maps['earth'],true);
+        draw_grid(mars,maps['mars_width'],maps['mars_height'],maps['mars'],false);
+
+        turn_field.innerText = turn;
+    }
+
+    function display_logs(params) {
+        document.getElementById('runner_view').style.display = "none";
+        document.getElementById('running_view').style.display = "block";
+
+        elements = [document.getElementById('red_earth'), document.getElementById('blue_earth'), document.getElementById('red_mars'), document.getElementById('blue_mars')]
+
+        return setInterval(async function() {
+            logs = await eel.get_player_logs()();
+            for (var i=0; i<4; i++) elements[i].innerText = logs[i];
+
+            var maps = await eel.get_viewer_data(-1)();
+            var turn = Math.floor(maps['turn']/4);
+            viewer_cache[turn] = maps;
+
+            slider.max = max_turn = turn;
+
+            if (view_latest) {
+                slider.value = turn;
+                render_turn(turn);
+            }
+        },300);
+    }
+
+    document.onkeydown = function(e) {
+        //e = e || window.event;
+        if (e.keyCode == '37' && slider.value > 0) {
+           e.preventDefault();
+           view_latest = false;
+           slider.value = slider.value - 1;
+           render_turn(slider.value);
+       } else if (e.keyCode == '39' && slider.value < slider.max) {
+           e.preventDefault();
+           view_latest = false;
+           slider.value = slider.value + 1;
+           render_turn(slider.value);
+        }
+    }
+    var upload = document.getElementById("upload")
+    upload.onclick = async function() {
+        var params = {}
+        params['player'] = document.getElementById('upload_name').value;
+        params['username'] = document.getElementById('upload_username').value;
+        params['password'] = document.getElementById('upload_password').value;
+
+        params['file_name'] = document.getElementById("upload_players");
+        params['file_name'] = params['file_name'].options[params['file_name'].selectedIndex].value;
+
+        var response = await eel.upload_scrim_server(params)();
+        if (response == 'success') {
+            close_upload();
+            upload_success("Uploaded " + params['file_name'] + ".");
+        } else upload_error(response);
+   }
+
+    var download = document.getElementById("download")
+    download.onclick = async function() {
+        var file_name = document.getElementById('download_file_name').value;
+        var error = await eel.save_logs(file_name)()();
+
+        console.log(error);
+
+   }
+
+    var submit = document.getElementById("submit")
+    submit.onclick = async function() {
+        var params = {}
+        //params['use_viewer'] = document.querySelector('input[name="viewer"]:checked').value;
+        params['player_memory'] = document.getElementById('memory').value;
+        params['player_cpu'] = 100;
+        params['time_pool'] = document.getElementById('pool').value;
+        params['time_additional'] = document.getElementById('additional').value;
+        params['replay_filename'] = document.getElementById('replay').value;
+
+        params['dir_p1'] = document.getElementById("red")
+        params['dir_p1'] = params['dir_p1'].options[params['dir_p1'].selectedIndex].value;
+        params['dir_p2'] = document.getElementById("blue")
+        params['dir_p2'] = params['dir_p2'].options[params['dir_p2'].selectedIndex].value;
+        params['map'] = document.getElementById("map")
+        params['map'] = params['map'].options[params['map'].selectedIndex].value;
+
+        if (validate(params)) {
+            eel.run_game(params)();
+            interval = display_logs(params);
+        }
+    }
+
+    </script>
+
+
+</body></html>
